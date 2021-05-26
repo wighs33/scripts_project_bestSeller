@@ -33,7 +33,12 @@ def Init_basicBooks():
     key = list(categoryDict.keys())
     for i in range(7):
         label = Label(canvas, text=key[i], font=font_, width=15)
-        canvas.create_window(20, 15+40*i, anchor='nw', window=label)
+        canvas.create_window(20, 15+200*i, anchor='nw', window=label)
+
+    for i in range(7):
+        for j in range(4):
+            button = Button(canvas, width=12, height=7)
+            canvas.create_window(30+130*j, 65+200*i, anchor='nw', window=button)
 def Init_menuButton():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 10, 2
