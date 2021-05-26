@@ -123,11 +123,14 @@ def Init_Scene_Home():
 # search
 ################################################################
 def searchCategory():   # 분야별 검색
-    pass
+    global search_state
+    search_state = 'category'
 def searchAuthor():     # 저자별 검색
-    pass
+    global search_state
+    search_state = 'author'
 def searchTitle():      # 제목 검색
-    pass
+    global search_state
+    search_state = 'title'
 def Init_threeButtons():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 8, 2
@@ -143,6 +146,8 @@ def Init_threeButtons():
     objects.append(b_author)
     objects.append(b_title)
 def Init_Scene_Search():
+    global search_state
+    search_state = 'category'   # 디폴트 - 분야별 검색
     Init_threeButtons()     # 분야, 저자, 제목 버튼 생성
 ################################################################
 # favorites
