@@ -12,17 +12,19 @@ def InitTopText():
     MainText.pack()
 
 def InitMenuButton():
+    h=2
+    w=5
     TempFont = font.Font(window, size=20, weight='bold', family ='Consolas')
-    HomeButton = Button(window, font = TempFont, text="홈",image=pixelVirtual, height=100, width=150, compound="c", command=SearchButtonAction)
+    HomeButton = Button(window, font = TempFont, text="홈", command=SearchButtonAction, height=h, width=w)
     HomeButton.pack()
-    HomeButton.place(x=0, y=650)
-    SearchButton = Button(window, font = TempFont, text="검색", image=pixelVirtual, height=100, width=150, compound="c", command=SearchButtonAction)
+    HomeButton.place(x=0, y=0)
+    SearchButton = Button(window, font = TempFont, text="검색", height=h, width=w, command=SearchButtonAction)
     SearchButton.pack()
-    SearchButton.place(x=150, y=650)
-    FavoritesButton = Button(window, font = TempFont, text="즐겨찾기", image=pixelVirtual, height=100, width=150, compound="c", command=SearchButtonAction)
+    SearchButton.place(x=150, y=0)
+    FavoritesButton = Button(window, font = TempFont, text="즐겨찾기", height=0, width=0, command=SearchButtonAction)
     FavoritesButton.pack()
     FavoritesButton.place(x=300, y=650)
-    LibraryButton = Button(window, font = TempFont, text="도서관", image=pixelVirtual, height=100, width=150, compound="c", command=SearchButtonAction)
+    LibraryButton = Button(window, font = TempFont, text="도서관", height=0, width=0, command=SearchButtonAction)
     LibraryButton.pack()
     LibraryButton.place(x=450, y=650)
 
