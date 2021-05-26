@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import font
+import func
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -29,6 +30,16 @@ def Init_basicBooks():
     canvas.pack()
     scrollbar.config(command=canvas.yview)
 
+    # 나중에 데이터로 대체
+    #################################
+    urlList = ['https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
+               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
+               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
+               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831']
+    imageList = []
+    for url in urlList:
+        imageList.append(func.getImage(url))
+
     y_distance = 290
     font_ = font.Font(window, size=17, weight='bold', family='Consolas')
     key = list(categoryDict.keys())
@@ -39,7 +50,8 @@ def Init_basicBooks():
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
     for i in range(7):
         for j in range(4):
-            button = Button(canvas, width=12, height=7)
+            button = Button(canvas, image=imageList[j], width=90, height=130)
+            button.image = imageList[j]  # 해줘야 이미지 뜸
             canvas.create_window(30+130*j, 65+y_distance*i, anchor='nw', window=button)
 
             label = Label(canvas, text='abcdef', font=font_, width=12, height=3)
