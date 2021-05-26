@@ -40,7 +40,11 @@ def Init_basicBooks():
     for url in urlList:
         imageList.append(func.getImage(url))
 
-    titleList = ['편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)']
+    tmp_titleList = ['편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)']
+    titleList = []
+    for t in tmp_titleList:
+        titleList.append(func.changeTitle(t))
+    #################################
 
     y_distance = 290
     font_ = font.Font(window, size=17, weight='bold', family='Consolas')
