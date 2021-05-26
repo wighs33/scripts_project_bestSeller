@@ -10,6 +10,17 @@ categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자�
 selected_color = 'yellow'   # 선택된 menu 버튼 색상
 default_color = 'light grey'    # 선택되지 않은 menu 버튼 색상
 ################################################################
+# common
+################################################################
+def openBook():
+    myframe = Frame(window)
+    myframe.place(x=20, y=30)
+    scrollbar = Scrollbar(myframe)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    canvas = Canvas(myframe, bg='white', width=540, height=610, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2050))
+    canvas.pack()
+    scrollbar.config(command=canvas.yview)
+################################################################
 # home
 ################################################################
 def menuHome():
@@ -93,7 +104,7 @@ def Init_basicBooks():
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
     for i in range(7):
         for j in range(4):
-            button = Button(canvas, image=imageList[j], width=90, height=130)
+            button = Button(canvas, image=imageList[j], command=openBook, width=90, height=130)
             button.image = imageList[j]  # 해줘야 이미지 뜸
             canvas.create_window(30+130*j, 65+y_distance*i, anchor='nw', window=button)
 
@@ -244,7 +255,7 @@ def Init_bookList():
     y_distance = 220
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
     for i in range(16):
-        button = Button(canvas, image=imageList[i], width=90, height=130)
+        button = Button(canvas, image=imageList[i], command=openBook, width=90, height=130)
         button.image = imageList[i]  # 해줘야 이미지 뜸
         canvas.create_window(30+130*(i%4), 15+y_distance*(i//4), anchor='nw', window=button)
 
