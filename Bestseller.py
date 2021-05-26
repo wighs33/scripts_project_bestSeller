@@ -6,17 +6,39 @@ categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자�
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
                 '사전': 240, '과학/공학': 250, '취업/수험서': 260, '여행/지도': 270, '컴퓨터/IT': 280, '잡지': 290, '청소년': 300, '유아': 310,
                 '어린이': 320, '만화': 330, '해외도서': 340}
+selected_color = 'yellow'   # 선택된 menu 버튼 색상
+default_color = 'light grey'    # 선택되지 않은 menu 버튼 색상
 ################################################################
 # home
 ################################################################
 def menuHome():
-    pass
+    global scene, b_menu
+    if scene != 'home':
+        scene = 'home'
+        for i in range(4):
+            b_menu[i]['bg'] = default_color
+        b_menu[0]['bg'] = selected_color
 def menuSearch():
-    pass
+    global scene, b_menu
+    if scene != 'search':
+        scene = 'search'
+        for i in range(4):
+            b_menu[i]['bg'] = default_color
+        b_menu[1]['bg'] = selected_color
 def menuFavorites():
-    pass
+    global scene, b_menu
+    if scene != 'favorites':
+        scene = 'favorites'
+        for i in range(4):
+            b_menu[i]['bg'] = default_color
+        b_menu[2]['bg'] = selected_color
 def menuLibrary():
-    pass
+    global scene, b_menu
+    if scene != 'library':
+        scene = 'library'
+        for i in range(4):
+            b_menu[i]['bg'] = default_color
+        b_menu[3]['bg'] = selected_color
 def Init_topLabel():
     font_ = font.Font(window, size=30, weight='bold', family='Consolas')
     topLabel = Label(window, text='Bestseller', font=font_)
@@ -63,14 +85,15 @@ def Init_basicBooks():
             label = Label(canvas, text=titleList[j], font=font_, width=12, height=3)
             canvas.create_window(30-9+130*j, 210+y_distance*i, anchor='nw', window=label)
 def Init_menuButton():
+    global b_menu
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 10, 2
     b_x, b_y = 0, 662
     b_menu = []
-    b_menu.append(Button(window, text="홈", command=menuHome, font=font_, width=b_width, height=b_height))
-    b_menu.append(Button(window, text="검색", command=menuSearch, font=font_, width=b_width, height=b_height))
-    b_menu.append(Button(window, text="즐겨찾기", command=menuFavorites, font=font_, width=b_width, height=b_height))
-    b_menu.append(Button(window, text="도서관", command=menuLibrary, font=font_, width=b_width, height=b_height))
+    b_menu.append(Button(window, text="홈", bg=selected_color, command=menuHome, font=font_, width=b_width, height=b_height))
+    b_menu.append(Button(window, text="검색", bg=default_color, command=menuSearch, font=font_, width=b_width, height=b_height))
+    b_menu.append(Button(window, text="즐겨찾기", bg=default_color, command=menuFavorites, font=font_, width=b_width, height=b_height))
+    b_menu.append(Button(window, text="도서관", bg=default_color, command=menuLibrary, font=font_, width=b_width, height=b_height))
     b_menu[0].place(x=b_x, y=b_y)
     b_menu[1].place(x=b_x+150, y=b_y)
     b_menu[2].place(x=b_x+300, y=b_y)
@@ -84,6 +107,7 @@ window = Tk()
 window.title('Bestseller')
 window.geometry('600x750+450+30')
 
+scene = 'home'  # 시작 scene = home
 Init_HomeState()
 
 window.mainloop()
