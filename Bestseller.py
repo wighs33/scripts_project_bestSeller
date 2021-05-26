@@ -16,7 +16,7 @@ def menuHome():
     if scene != 'home':     # home이 아닌 scene에서 home 버튼을 누르면 객체들 삭제 후 home 생성
         for obj in objects:
             obj.destroy()
-        Init_HomeState()
+        Init_Scene_Home()
         scene = 'home'
         for i in range(4):
             b_menu[i]['bg'] = default_color
@@ -26,6 +26,7 @@ def menuSearch():
     if scene != 'search':     # search가 아닌 scene에서 search 버튼을 누르면 객체들 삭제 후 search 생성
         for obj in objects:
             obj.destroy()
+        Init_Scene_Search()
         scene = 'search'
         for i in range(4):
             b_menu[i]['bg'] = default_color
@@ -35,6 +36,7 @@ def menuFavorites():
     if scene != 'favorites':     # favorites가 아닌 scene에서 favorites 버튼을 누르면 객체들 삭제 후 favorites 생성
         for obj in objects:
             obj.destroy()
+        Init_Scene_Favorites()
         scene = 'favorites'
         for i in range(4):
             b_menu[i]['bg'] = default_color
@@ -44,6 +46,7 @@ def menuLibrary():
     if scene != 'library':     # library가 아닌 scene에서 library 버튼을 누르면 객체들 삭제 후 library 생성
         for obj in objects:
             obj.destroy()
+        Init_Scene_Library()
         scene = 'library'
         for i in range(4):
             b_menu[i]['bg'] = default_color
@@ -112,11 +115,45 @@ def Init_menuButton():
     b_menu[1].place(x=b_x+150, y=b_y)
     b_menu[2].place(x=b_x+300, y=b_y)
     b_menu[3].place(x=b_x+450, y=b_y)
-def Init_HomeState():
+def Init_Scene_Home():
     Init_topLabel()
     Init_basicBooks()
     Init_menuButton()
+################################################################
+# search
+################################################################
+def searchCategory():   # 분야별 검색
+    pass
+def searchAuthor():     # 저자별 검색
+    pass
+def searchTitle():      # 제목 검색
+    pass
+def Init_threeButtons():
+    font_ = font.Font(window, size=20, weight='bold', family='Consolas')
+    b_width, b_height = 8, 2
+    b_x, b_y = 55, 30
+    b_category = Button(window, text="분야", command=searchCategory, font=font_, width=b_width, height=b_height)
+    b_author = Button(window, text="저자", command=searchAuthor, font=font_, width=b_width, height=b_height)
+    b_title = Button(window, text="제목", command=searchTitle, font=font_, width=b_width, height=b_height)
+    b_category.place(x=b_x, y=b_y)
+    b_author.place(x=b_x+180, y=b_y)
+    b_title.place(x=b_x+360, y=b_y)
 
+    objects.append(b_category)
+    objects.append(b_author)
+    objects.append(b_title)
+def Init_Scene_Search():
+    Init_threeButtons()     # 분야, 저자, 제목 버튼 생성
+################################################################
+# favorites
+################################################################
+def Init_Scene_Favorites():
+    pass
+################################################################
+# library
+################################################################
+def Init_Scene_Library():
+    pass
 window = Tk()
 window.title('Bestseller')
 window.geometry('600x750+450+30')
@@ -124,6 +161,6 @@ window.geometry('600x750+450+30')
 objects = []    # state 전환시 삭제될 객체들 보관
 
 scene = 'home'  # 시작 scene = home
-Init_HomeState()
+Init_Scene_Home()
 
 window.mainloop()
