@@ -16,6 +16,14 @@ def Init_topLabel():
     font_ = font.Font(window, size=30, weight='bold', family='Consolas')
     topLabel = Label(window, text='Bestseller', font=font_)
     topLabel.place(x=185, y=20)
+def Init_basicBooks():
+    myframe = Frame(window)
+    myframe.place(x=20, y=100)
+    scrollbar = Scrollbar(myframe)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    canvas = Canvas(myframe, bg='white', width=540, height=540, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2050))
+    canvas.pack()
+    scrollbar.config(command=canvas.yview)
 def Init_menuButton():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 10, 2
@@ -31,6 +39,7 @@ def Init_menuButton():
     b_menu[3].place(x=b_x+450, y=b_y)
 def Init_HomeState():
     Init_topLabel()
+    Init_basicBooks()
     Init_menuButton()
 
 window = Tk()
