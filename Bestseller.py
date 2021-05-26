@@ -174,7 +174,12 @@ def Init_searchEntry():
 
     objects.append(e_search)
 def searchBook():
-    pass
+    global search_state
+    if search_state == 'category':  # 검색 키워드 get
+        keyword = combobox.get()
+    else:
+        keyword = e_search.get()
+    print(keyword)
 def Init_threeButtons():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 8, 2
