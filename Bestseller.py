@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import font
 import tkinter.ttk
 import func
+import webbrowser
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -12,6 +13,8 @@ default_color = 'light grey'    # 선택되지 않은 menu 버튼 색상
 ################################################################
 # common
 ################################################################
+def callback(url):  # 하이퍼링크
+    webbrowser.open_new(url)
 def openBook():
     myframe = Frame(window)
     myframe.place(x=20, y=30)
@@ -45,7 +48,8 @@ def openBook():
     l_bookInfo2 = Label(canvas, text=info2, font=font_, width=52, height=10, justify=LEFT)
     canvas.create_window(35, 250, anchor='nw', window=l_bookInfo2)
 
-    l_bookInfo3 = Label(canvas, text=info3, font=font_, width=52, height=5, justify=LEFT)
+    l_bookInfo3 = Label(canvas, text=info3, font=font_, width=52, height=5, justify=LEFT, fg='blue', cursor='hand2')
+    l_bookInfo3.bind('<Button-1>', lambda e: callback(link))
     canvas.create_window(35, 470, anchor='nw', window=l_bookInfo3)
 ################################################################
 # home
