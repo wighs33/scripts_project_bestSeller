@@ -15,14 +15,15 @@ default_color = 'light grey'    # 선택되지 않은 menu 버튼 색상
 ################################################################
 def callback(url):  # 하이퍼링크
     webbrowser.open_new(url)
-def openBook():
-    myframe = Frame(window)
-    myframe.place(x=20, y=30)
-    scrollbar = Scrollbar(myframe)
+def openBook():     # 책 상세정보창 열기
+    global new_myframe, new_canvas
+    new_myframe = Frame(window)
+    new_myframe.place(x=20, y=30)
+    scrollbar = Scrollbar(new_myframe)
     scrollbar.pack(side=RIGHT, fill=Y)
-    canvas = Canvas(myframe, bg='white', width=540, height=610, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 700))
-    canvas.pack()
-    scrollbar.config(command=canvas.yview)
+    new_canvas = Canvas(new_myframe, bg='white', width=540, height=610, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 700))
+    new_canvas.pack()
+    scrollbar.config(command=new_canvas.yview)
 
     image = func.getImage_Big('https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322')
     title = '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십'
@@ -38,27 +39,29 @@ def openBook():
     info3 = '책 정보 링크\n' + func.changeLink(link)
 
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
-    l_bookImage = Label(canvas, image=image, width=150, height=203)
+    l_bookImage = Label(new_canvas, image=image, width=150, height=203)
     l_bookImage.image = image  # 해줘야 이미지 뜸
-    canvas.create_window(35, 30, anchor='nw', window=l_bookImage)
+    new_canvas.create_window(35, 30, anchor='nw', window=l_bookImage)
 
-    l_bookInfo1 = Label(canvas, text=info1, font=font_, width=32, height=10, justify=LEFT)
-    canvas.create_window(215, 30, anchor='nw', window=l_bookInfo1)
+    l_bookInfo1 = Label(new_canvas, text=info1, font=font_, width=32, height=10, justify=LEFT)
+    new_canvas.create_window(215, 30, anchor='nw', window=l_bookInfo1)
 
-    l_bookInfo2 = Label(canvas, text=info2, font=font_, width=52, height=10, justify=LEFT)
-    canvas.create_window(35, 250, anchor='nw', window=l_bookInfo2)
+    l_bookInfo2 = Label(new_canvas, text=info2, font=font_, width=52, height=10, justify=LEFT)
+    new_canvas.create_window(35, 250, anchor='nw', window=l_bookInfo2)
 
-    l_bookInfo3 = Label(canvas, text=info3, font=font_, width=52, height=5, justify=LEFT, fg='blue', cursor='hand2')
+    l_bookInfo3 = Label(new_canvas, text=info3, font=font_, width=52, height=5, justify=LEFT, fg='blue', cursor='hand2')
     l_bookInfo3.bind('<Button-1>', lambda e: callback(link))
-    canvas.create_window(35, 470, anchor='nw', window=l_bookInfo3)
+    new_canvas.create_window(35, 470, anchor='nw', window=l_bookInfo3)
 
     font_ = font.Font(window, size=30, weight='bold', family='Consolas')
-    b_back = Button(canvas, text='◀', font=font_, command=closeBook, width=3, height=0)
-    canvas.create_window(185, 585, anchor='nw', window=b_back)
-    b_favorite = Button(canvas, text='☆', font=font_, command=addFavorites, width=3, height=0)
-    canvas.create_window(295, 585, anchor='nw', window=b_favorite)
+    b_back = Button(new_canvas, text='◀', font=font_, command=closeBook, width=3, height=0)
+    new_canvas.create_window(185, 585, anchor='nw', window=b_back)
+    b_favorite = Button(new_canvas, text='☆', font=font_, command=addFavorites, width=3, height=0)
+    new_canvas.create_window(295, 585, anchor='nw', window=b_favorite)
 def closeBook():  # 책 상세정보창 닫기
-    pass
+    global new_myframe, new_canvas
+    new_myframe.destroy()
+    new_canvas.destroy()
 def addFavorites():  # 책 즐겨찾기에 추가
     pass
 ################################################################
