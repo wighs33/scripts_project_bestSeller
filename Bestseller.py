@@ -40,6 +40,8 @@ def Init_basicBooks():
     for url in urlList:
         imageList.append(func.getImage(url))
 
+    titleList = ['편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)']
+
     y_distance = 290
     font_ = font.Font(window, size=17, weight='bold', family='Consolas')
     key = list(categoryDict.keys())
@@ -54,7 +56,7 @@ def Init_basicBooks():
             button.image = imageList[j]  # 해줘야 이미지 뜸
             canvas.create_window(30+130*j, 65+y_distance*i, anchor='nw', window=button)
 
-            label = Label(canvas, text='abcdef', font=font_, width=12, height=3)
+            label = Label(canvas, text=titleList[j], font=font_, width=12, height=3)
             canvas.create_window(30-9+130*j, 210+y_distance*i, anchor='nw', window=label)
 def Init_menuButton():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
