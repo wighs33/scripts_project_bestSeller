@@ -124,14 +124,32 @@ def Init_Scene_Home():
 # search
 ################################################################
 def searchCategory():   # 분야별 검색
-    global search_state
+    global search_state, combobox, e_search
+    if search_state != 'category':  # 저자, 제목 검색에서 분야 검색으로 전환하는 경우 - entry 삭제 후 combobox 생성
+        e_search.destroy()
+        objects.remove(e_search)
+        Init_Combobox()
     search_state = 'category'
 def searchAuthor():     # 저자별 검색
-    global search_state
+    global search_state, combobox, e_search
+    if search_state == 'category':  # 분야 검색에서 저자 검색으로 전환하는 경우 - combobox 삭제 후 entry 생성
+        combobox.destroy()
+        objects.remove(combobox)
+    else:  # 저자 검색에서 저자 or 제목 버튼 클릭 -> entry 초기화
+        e_search.destroy()
+        objects.remove(e_search)
     search_state = 'author'
+    Init_searchEntry()
 def searchTitle():      # 제목 검색
-    global search_state
+    global search_state, combobox, e_search
+    if search_state == 'category':  # 분야 검색에서 제목 검색으로 전환하는 경우 - combobox 삭제 후 entry 생성
+        combobox.destroy()
+        objects.remove(combobox)
+    else:  # 제목 검색에서 제목 or 저자 버튼 클릭 -> entry 초기화
+        e_search.destroy()
+        objects.remove(e_search)
     search_state = 'title'
+    Init_searchEntry()
 def Init_Combobox():
     global combobox
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
@@ -145,6 +163,16 @@ def Init_Combobox():
     window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
 
     objects.append(combobox)
+def Init_searchEntry():
+    global e_search, search_state
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    key = StringVar()
+    key.set('저자명 입력') if search_state == 'author' else key.set('제목 입력')     # entry 텍스트 디폴트 값
+    e_search = Entry(window, textvariable=key, justify=LEFT, font=font_)
+    e_search.pack()
+    e_search.place(x=80, y=150, width=350, height=30)
+
+    objects.append(e_search)
 def searchBook():
     pass
 def Init_threeButtons():
