@@ -13,28 +13,37 @@ default_color = 'light grey'    # 선택되지 않은 menu 버튼 색상
 ################################################################
 def menuHome():
     global scene, b_menu
-    if scene != 'home':
+    if scene != 'home':     # home이 아닌 scene에서 home 버튼을 누르면 객체들 삭제 후 home 생성
+        for obj in objects:
+            obj.destroy()
+        Init_HomeState()
         scene = 'home'
         for i in range(4):
             b_menu[i]['bg'] = default_color
         b_menu[0]['bg'] = selected_color
 def menuSearch():
     global scene, b_menu
-    if scene != 'search':
+    if scene != 'search':     # search가 아닌 scene에서 search 버튼을 누르면 객체들 삭제 후 search 생성
+        for obj in objects:
+            obj.destroy()
         scene = 'search'
         for i in range(4):
             b_menu[i]['bg'] = default_color
         b_menu[1]['bg'] = selected_color
 def menuFavorites():
     global scene, b_menu
-    if scene != 'favorites':
+    if scene != 'favorites':     # favorites가 아닌 scene에서 favorites 버튼을 누르면 객체들 삭제 후 favorites 생성
+        for obj in objects:
+            obj.destroy()
         scene = 'favorites'
         for i in range(4):
             b_menu[i]['bg'] = default_color
         b_menu[2]['bg'] = selected_color
 def menuLibrary():
     global scene, b_menu
-    if scene != 'library':
+    if scene != 'library':     # library가 아닌 scene에서 library 버튼을 누르면 객체들 삭제 후 library 생성
+        for obj in objects:
+            obj.destroy()
         scene = 'library'
         for i in range(4):
             b_menu[i]['bg'] = default_color
@@ -43,6 +52,8 @@ def Init_topLabel():
     font_ = font.Font(window, size=30, weight='bold', family='Consolas')
     topLabel = Label(window, text='Bestseller', font=font_)
     topLabel.place(x=185, y=20)
+
+    objects.append(topLabel)
 def Init_basicBooks():
     myframe = Frame(window)
     myframe.place(x=20, y=100)
@@ -84,6 +95,9 @@ def Init_basicBooks():
 
             label = Label(canvas, text=titleList[j], font=font_, width=12, height=3)
             canvas.create_window(30-9+130*j, 210+y_distance*i, anchor='nw', window=label)
+
+    objects.append(canvas)
+    objects.append(myframe)
 def Init_menuButton():
     global b_menu
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
@@ -106,6 +120,8 @@ def Init_HomeState():
 window = Tk()
 window.title('Bestseller')
 window.geometry('600x750+450+30')
+
+objects = []    # state 전환시 삭제될 객체들 보관
 
 scene = 'home'  # 시작 scene = home
 Init_HomeState()
