@@ -45,3 +45,13 @@ def changeText(text):     # 책 상세정보에서 제목, 저자 크키에 맞�
     else:
         c_text += text
     return c_text
+def changeDate(date):   # 출간일 형식 YYYY/MM/DD 로 변경
+    c_date = ''
+    c_date += date[:4]
+    c_date += '/'
+    date = date[4:]
+    c_date += date[:2]
+    c_date += '/'
+    date = date[2:]
+    c_date += date
+    return c_date

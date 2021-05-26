@@ -27,7 +27,7 @@ def openBook():
     pubdate = '20180713'
     price = '14800'
 
-    info1 = '제목: '+func.changeText(title)+'\n\n저자: '+func.changeText(author)+'\n\n출간일: '+pubdate+'\n\n가격: '+price+'원'
+    info1 = '제목: '+func.changeText(title)+'\n\n저자: '+func.changeText(author)+'\n\n출간일: '+func.changeDate(pubdate)+'\n\n가격: '+price+'원'
 
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
     l_bookImage = Label(canvas, image=image, width=150, height=203)
