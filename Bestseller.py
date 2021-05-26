@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import font
+import tkinter.ttk
 import func
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
@@ -131,6 +132,19 @@ def searchAuthor():     # 저자별 검색
 def searchTitle():      # 제목 검색
     global search_state
     search_state = 'title'
+def Init_Combobox():
+    global combobox
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    lst = []
+    for k in categoryDict.keys():
+        lst.append(k)
+    combobox = tkinter.ttk.Combobox(window, width=30, font=font_, values=lst)  # value=분야 리스트
+    combobox.pack()
+    combobox.place(x=80, y=150)
+
+    objects.append(combobox)
+def searchBook():
+    pass
 def Init_threeButtons():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 8, 2
@@ -145,10 +159,19 @@ def Init_threeButtons():
     objects.append(b_category)
     objects.append(b_author)
     objects.append(b_title)
+def Init_searchKeyword():
+    Init_Combobox()
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    b_search = Button(window, text="검색", command=searchBook, font=font_, width=5)
+    b_search.pack()
+    b_search.place(x=450, y=144)
+
+    objects.append(b_search)
 def Init_Scene_Search():
     global search_state
     search_state = 'category'   # 디폴트 - 분야별 검색
     Init_threeButtons()     # 분야, 저자, 제목 버튼 생성
+    Init_searchKeyword()  # 검색 키워드 입력받는 combobox(분야) 또는 entry(저자,제목) 생성 & 검색 버튼 생성 / 디폴트 - 분야 검색
 ################################################################
 # favorites
 ################################################################
