@@ -20,6 +20,22 @@ def openBook():
     canvas = Canvas(myframe, bg='white', width=540, height=610, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2050))
     canvas.pack()
     scrollbar.config(command=canvas.yview)
+
+    image = func.getImage_Big('https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322')
+    title = '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십'
+    author = '일이삼사오육칠팔구십일이삼사오육칠팔구십'
+    pubdate = '20180713'
+    price = '14800'
+
+    info1 = '제목: '+title+'\n\n저자: '+author+'\n\n출간일: '+pubdate+'\n\n가격: '+price+'원'
+
+    font_ = font.Font(window, size=13, weight='normal', family='Consolas')
+    l_bookImage = Label(canvas, image=image, width=150, height=203)
+    l_bookImage.image = image  # 해줘야 이미지 뜸
+    canvas.create_window(40, 40, anchor='nw', window=l_bookImage)
+
+    l_bookInfo1 = Label(canvas, text=info1, font=font_, width=32, height=10, justify=LEFT)
+    canvas.create_window(220, 40, anchor='nw', window=l_bookInfo1)
 ################################################################
 # home
 ################################################################
