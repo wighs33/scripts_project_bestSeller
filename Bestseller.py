@@ -20,7 +20,7 @@ def openBook():
     myframe.place(x=20, y=30)
     scrollbar = Scrollbar(myframe)
     scrollbar.pack(side=RIGHT, fill=Y)
-    canvas = Canvas(myframe, bg='white', width=540, height=610, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2050))
+    canvas = Canvas(myframe, bg='white', width=540, height=610, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 700))
     canvas.pack()
     scrollbar.config(command=canvas.yview)
 
@@ -51,6 +51,16 @@ def openBook():
     l_bookInfo3 = Label(canvas, text=info3, font=font_, width=52, height=5, justify=LEFT, fg='blue', cursor='hand2')
     l_bookInfo3.bind('<Button-1>', lambda e: callback(link))
     canvas.create_window(35, 470, anchor='nw', window=l_bookInfo3)
+
+    font_ = font.Font(window, size=30, weight='bold', family='Consolas')
+    b_back = Button(canvas, text='◀', font=font_, command=closeBook, width=3, height=0)
+    canvas.create_window(185, 585, anchor='nw', window=b_back)
+    b_favorite = Button(canvas, text='☆', font=font_, command=addFavorites, width=3, height=0)
+    canvas.create_window(295, 585, anchor='nw', window=b_favorite)
+def closeBook():  # 책 상세정보창 닫기
+    pass
+def addFavorites():  # 책 즐겨찾기에 추가
+    pass
 ################################################################
 # home
 ################################################################
