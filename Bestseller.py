@@ -26,16 +26,27 @@ def openBook():
     author = '일이삼사오육칠팔구십일이삼사오육칠팔구십'
     pubdate = '20180713'
     price = '14800'
-
     info1 = '제목: '+func.changeText(title)+'\n\n저자: '+func.changeText(author)+'\n\n출간일: '+func.changeDate(pubdate)+'\n\n가격: '+price+'원'
+
+    description = '암울한 미래를 그린 현대 고전!과학이 최고도로 발달해 사회의 모든 면을 관리, 지배하고 인간의 추생과 자유까지 통제하는 미래 문명 세계를 그린 올더스 헉슬리의 『멋진 신세계』. 올더스 헉슬리가 1932년에 발표한 이 작품은 금세기에 미래를 가장 깊이 있고 날카롭게 파헤친 작품 중 하나로 평가받고 있다....'
+    info2 = '줄거리\n\n'+description
+
+    link = 'http://book.naver.com/bookdb/book_detail.php?bid=13785981'
+    info3 = '책 정보 링크\n'+link
 
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
     l_bookImage = Label(canvas, image=image, width=150, height=203)
     l_bookImage.image = image  # 해줘야 이미지 뜸
-    canvas.create_window(40, 40, anchor='nw', window=l_bookImage)
+    canvas.create_window(35, 30, anchor='nw', window=l_bookImage)
 
     l_bookInfo1 = Label(canvas, text=info1, font=font_, width=32, height=10, justify=LEFT)
-    canvas.create_window(220, 40, anchor='nw', window=l_bookInfo1)
+    canvas.create_window(215, 30, anchor='nw', window=l_bookInfo1)
+
+    l_bookInfo2 = Label(canvas, text=info2, font=font_, width=52, height=10, justify=LEFT)
+    canvas.create_window(35, 250, anchor='nw', window=l_bookInfo2)
+
+    l_bookInfo3 = Label(canvas, text=info3, font=font_, width=52, height=5, justify=LEFT)
+    canvas.create_window(35, 470, anchor='nw', window=l_bookInfo3)
 ################################################################
 # home
 ################################################################
