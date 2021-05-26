@@ -16,7 +16,9 @@ default_color = 'light grey'    # 선택되지 않은 menu 버튼 색상
 def callback(url):  # 하이퍼링크
     webbrowser.open_new(url)
 def openBook():     # 책 상세정보창 열기
-    global new_myframe, new_canvas
+    global new_myframe, new_canvas, b_menu
+    for b in b_menu:
+        b['state'] = 'disabled'
     new_myframe = Frame(window)
     new_myframe.place(x=20, y=30)
     scrollbar = Scrollbar(new_myframe)
@@ -59,7 +61,9 @@ def openBook():     # 책 상세정보창 열기
     b_favorite = Button(new_canvas, text='☆', font=font_, command=addFavorites, width=3, height=0)
     new_canvas.create_window(295, 585, anchor='nw', window=b_favorite)
 def closeBook():  # 책 상세정보창 닫기
-    global new_myframe, new_canvas
+    global new_myframe, new_canvas, b_menu
+    for b in b_menu:
+        b['state'] = 'normal'
     new_myframe.destroy()
     new_canvas.destroy()
 def addFavorites():  # 책 즐겨찾기에 추가
