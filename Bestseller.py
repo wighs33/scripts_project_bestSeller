@@ -141,6 +141,8 @@ def Init_Combobox():
     combobox = tkinter.ttk.Combobox(window, width=30, font=font_, values=lst)  # value=분야 리스트
     combobox.pack()
     combobox.place(x=80, y=150)
+    combobox.set('분야 선택')  # combobox 텍스트 디폴트 값
+    window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
 
     objects.append(combobox)
 def searchBook():
