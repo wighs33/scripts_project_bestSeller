@@ -86,7 +86,7 @@ class Book:
                 self.numberofbooks = len(self.titles)
 
 b = Book()
-b.setData("d_catg", "100", 16)
+b.setData("d_titl", "100", 16)
 print(b.titles)
 print(b.links)
 print(b.images)
