@@ -45,6 +45,24 @@ def changeText(text):     # 책 상세정보에서 제목, 저자 크키에 맞�
     else:
         c_text += text
     return c_text
+def changeDescription(text):     # 책 상세정보에서 줄거리 크키에 맞게 줄넘김
+    c_text = ''
+    l = 29
+    while len(text) > l:
+        c_text += text[:l]
+        c_text += '\n'
+        text = text[l:]
+    c_text += text
+    return c_text
+def changeLink(url):     # 책 상세정보에서 링크 크키에 맞게 줄넘김
+    c_url = ''
+    l = 48
+    while len(url) > l:
+        c_url += url[:l]
+        c_url += '\n'
+        url = url[l:]
+    c_url += url
+    return c_url
 def changeDate(date):   # 출간일 형식 YYYY/MM/DD 로 변경
     c_date = ''
     c_date += date[:4]
