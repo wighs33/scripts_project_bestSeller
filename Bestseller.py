@@ -28,6 +28,12 @@ def Init_basicBooks():
     canvas = Canvas(myframe, bg='white', width=540, height=540, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2050))
     canvas.pack()
     scrollbar.config(command=canvas.yview)
+
+    font_ = font.Font(window, size=17, weight='bold', family='Consolas')
+    key = list(categoryDict.keys())
+    for i in range(7):
+        label = Label(canvas, text=key[i], font=font_, width=15)
+        canvas.create_window(20, 15+40*i, anchor='nw', window=label)
 def Init_menuButton():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 10, 2
