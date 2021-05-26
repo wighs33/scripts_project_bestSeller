@@ -202,11 +202,63 @@ def Init_searchKeyword():
     b_search.place(x=450, y=144)
 
     objects.append(b_search)
+def Init_bookList():
+    myframe = Frame(window)
+    myframe.pack()
+    myframe.place(x=20, y=200)
+    scrollbar = Scrollbar(myframe)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    canvas = Canvas(myframe, bg='white', width=540, height=440, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 900))
+    canvas.pack()
+    scrollbar.config(command=canvas.yview)
+
+    # 나중에 데이터로 대체
+    #################################
+    urlList = ['https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
+               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
+               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
+               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831',
+               'https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
+               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
+               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
+               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831',
+               'https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
+               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
+               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
+               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831',
+               'https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
+               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
+               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
+               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831']
+    imageList = []
+    for url in urlList:
+        imageList.append(func.getImage(url))
+    tmp_titleList = ['편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)',
+                     '편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)',
+                     '편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)',
+                     '편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)']
+    titleList = []
+    for t in tmp_titleList:
+        titleList.append(func.changeTitle(t))
+    #################################
+    y_distance = 220
+    font_ = font.Font(window, size=13, weight='normal', family='Consolas')
+    for i in range(16):
+        button = Button(canvas, image=imageList[i], width=90, height=130)
+        button.image = imageList[i]  # 해줘야 이미지 뜸
+        canvas.create_window(30+130*(i%4), 15+y_distance*(i//4), anchor='nw', window=button)
+
+        label = Label(canvas, text=titleList[i], font=font_, width=12, height=3)
+        canvas.create_window(30-9+130*(i%4), 160+y_distance*(i//4), anchor='nw', window=label)
+
+    objects.append(canvas)
+    objects.append(myframe)
 def Init_Scene_Search():
     global search_state
     search_state = 'category'   # 디폴트 - 분야별 검색
     Init_threeButtons()     # 분야, 저자, 제목 버튼 생성
     Init_searchKeyword()  # 검색 키워드 입력받는 combobox(분야) 또는 entry(저자,제목) 생성 & 검색 버튼 생성 / 디폴트 - 분야 검색
+    Init_bookList()  # 검색에 따라 추천하는 책들 띄우기
 ################################################################
 # favorites
 ################################################################
