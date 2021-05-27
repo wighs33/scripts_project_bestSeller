@@ -35,7 +35,7 @@ def openBook(book):     # 책 상세정보창 열기
     new_canvas.create_window(35, 30, anchor='nw', window=l_bookImage)
 
     # 책 상세정보 info1
-    info1 = '제목: '+func.changeText(book.title)+'\n\n저자: '+func.changeText(book.author)+'\n\n출간일: '\
+    info1 = '제목: '+func.changeTitleOfDetail(book.title)+'\n\n저자: '+func.changeText(book.author)+'\n\n출간일: '\
             +func.changeDate(book.pubdate)+'\n\n가격: '+book.price+'원'
 
     l_bookInfo1 = Label(new_canvas, text=info1, font=font_, width=32, height=10, justify=LEFT)
