@@ -33,7 +33,7 @@ def openBook(books, index):     # 책 상세정보창 열기
     scrollbar.config(command=new_canvas.yview)
 
     image = func.getImage_Big(myBooks.images[index])
-    info1 = '제목: '+func.changeText(myBooks.titles[index])+'\n\n저자: '+func.changeText(myBooks.authors[index])+'\n\n출간일: '\
+    info1 = '제목: '+func.changeTitleOfDetail(myBooks.titles[index])+'\n\n저자: '+func.changeText(myBooks.authors[index])+'\n\n출간일: '\
             +func.changeDate(myBooks.pubdates[index])+'\n\n가격: '+myBooks.prices[index]+'원'
 
     info2 = '줄거리\n\n'+func.changeDescription(myBooks.descriptions[index])
