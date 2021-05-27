@@ -2,6 +2,7 @@ from io import BytesIO
 import urllib
 import urllib.request
 from PIL import Image, ImageTk
+import webbrowser
 
 def getImage(url):      # url로 해당 이미지 생성
     with urllib.request.urlopen(url) as u:
@@ -31,24 +32,6 @@ def changeTitle(title):     # 책 제목 라벨 크키에 맞게 변경
             c_title += title[:7]
             c_title += '\n'
             title = title[7:]
-            line += 1
-    if over is False:
-        c_title += title
-    return c_title
-def changeTitleOfDetail(title):     # 책 제목 라벨 크키에 맞게 변경
-    c_title = ''
-    line = 1
-    over = False
-    while len(title) > 14:
-        if line == 3:
-            over = True
-            c_title += title[:10]
-            c_title += '...'
-            break
-        else:
-            c_title += title[:14]
-            c_title += '\n'
-            title = title[14:]
             line += 1
     if over is False:
         c_title += title
@@ -91,3 +74,5 @@ def changeDate(date):   # 출간일 형식 YYYY/MM/DD 로 변경
     date = date[2:]
     c_date += date
     return c_date
+def callback(url):  # 하이퍼링크
+    webbrowser.open_new(url)
