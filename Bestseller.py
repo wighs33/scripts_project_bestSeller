@@ -13,7 +13,7 @@ selected_color = 'yellow'   # 선택된 menu 버튼 색상
 default_color = 'light grey'    # 선택되지 않은 menu 버튼 색상
 ################################################################
 # common
-################################################################'
+################################################################
 def openBook(book):     # 책 상세정보창 열기
     global new_myframe, new_canvas, b_menu
     for b in b_menu:
@@ -35,7 +35,7 @@ def openBook(book):     # 책 상세정보창 열기
     new_canvas.create_window(35, 30, anchor='nw', window=l_bookImage)
 
     # 책 상세정보 info1
-    info1 = '제목: '+func.changeText(book.title)+'\n\n저자: '+func.changeText(book.author)+'\n\n출간일: '\
+    info1 = '제목: '+func.changeTitleOfDetail(book.title)+'\n\n저자: '+func.changeText(book.author)+'\n\n출간일: '\
             +func.changeDate(book.pubdate)+'\n\n가격: '+book.price+'원'
 
     l_bookInfo1 = Label(new_canvas, text=info1, font=font_, width=32, height=10, justify=LEFT)
