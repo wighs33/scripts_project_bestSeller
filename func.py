@@ -2,12 +2,13 @@ from io import BytesIO
 import urllib
 import urllib.request
 from PIL import Image, ImageTk
+import webbrowser
 
 def getImage(url):      # url로 해당 이미지 생성
     with urllib.request.urlopen(url) as u:
         raw_data = u.read()
     im = Image.open(BytesIO(raw_data))
-    im = im.resize((90, 130))  # image 크기 조정
+    im = im.resize((90, 130))   # image 크기 조정
     image = ImageTk.PhotoImage(im)
     return image
 def getImage_Big(url):      # url로 해당 이미지 생성
@@ -73,3 +74,5 @@ def changeDate(date):   # 출간일 형식 YYYY/MM/DD 로 변경
     date = date[2:]
     c_date += date
     return c_date
+def callback(url):  # 하이퍼링크
+    webbrowser.open_new(url)

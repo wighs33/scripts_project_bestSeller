@@ -1,8 +1,9 @@
 from tkinter import *
 from tkinter import font
 import tkinter.ttk
+from functools import partial
 import func
-import webbrowser
+from openAPI import *
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -12,10 +13,8 @@ selected_color = 'yellow'   # 선택된 menu 버튼 색상
 default_color = 'light grey'    # 선택되지 않은 menu 버튼 색상
 ################################################################
 # common
-################################################################
-def callback(url):  # 하이퍼링크
-    webbrowser.open_new(url)
-def openBook():     # 책 상세정보창 열기
+################################################################'
+def openBook(book):     # 책 상세정보창 열기
     global new_myframe, new_canvas, b_menu
     for b in b_menu:
         b['state'] = 'disabled'
@@ -27,51 +26,49 @@ def openBook():     # 책 상세정보창 열기
     new_canvas.pack()
     scrollbar.config(command=new_canvas.yview)
 
-    image = func.getImage_Big('https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322')
-    title = '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십'
-    author = '일이삼사오육칠팔구십일이삼사오육칠팔구십'
-    pubdate = '20180713'
-    price = '14800'
-    info1 = '제목: '+func.changeText(title)+'\n\n저자: '+func.changeText(author)+'\n\n출간일: '+func.changeDate(pubdate)+'\n\n가격: '+price+'원'
-
-    description = '암울한 미래를 그린 현대 고전!과학이 최고도로 발달해 사회의 모든 면을 관리, 지배하고 인간의 추생과 자유까지 통제하는 미래 문명 세계를 그린 올더스 헉슬리의 『멋진 신세계』. 올더스 헉슬리가 1932년에 발표한 이 작품은 금세기에 미래를 가장 깊이 있고 날카롭게 파헤친 작품 중 하나로 평가받고 있다....'
-    info2 = '줄거리\n\n' + func.changeDescription(description)
-
-    link = 'http://book.naver.com/bookdb/book_detail.php?bid=13785981'
-    info3 = '책 정보 링크\n' + func.changeLink(link)
+    # 책 이미지 라벨
+    img = func.getImage_Big(book.image)
 
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
-    l_bookImage = Label(new_canvas, image=image, width=150, height=203)
-    l_bookImage.image = image  # 해줘야 이미지 뜸
+    l_bookImage = Label(new_canvas, image=img, width=150, height=203)
+    l_bookImage.image = img  # 해줘야 이미지 뜸
     new_canvas.create_window(35, 30, anchor='nw', window=l_bookImage)
+
+    # 책 상세정보 info1
+    info1 = '제목: '+func.changeText(book.title)+'\n\n저자: '+func.changeText(book.author)+'\n\n출간일: '\
+            +func.changeDate(book.pubdate)+'\n\n가격: '+book.price+'원'
 
     l_bookInfo1 = Label(new_canvas, text=info1, font=font_, width=32, height=10, justify=LEFT)
     new_canvas.create_window(215, 30, anchor='nw', window=l_bookInfo1)
 
+    # 책 상세정보 info2
+    info2 = '줄거리\n\n'+func.changeDescription(book.description)
+
     l_bookInfo2 = Label(new_canvas, text=info2, font=font_, width=52, height=10, justify=LEFT)
     new_canvas.create_window(35, 250, anchor='nw', window=l_bookInfo2)
 
+    # 책 상세정보 info3
+    info3 = '책 정보 링크\n'+func.changeLink(book.link)
+
     l_bookInfo3 = Label(new_canvas, text=info3, font=font_, width=52, height=5, justify=LEFT, fg='blue', cursor='hand2')
-    l_bookInfo3.bind('<Button-1>', lambda e: callback(link))
+    l_bookInfo3.bind('<Button-1>', lambda e: func.callback(book.link))
     new_canvas.create_window(35, 470, anchor='nw', window=l_bookInfo3)
 
+    # 뒤로가기, 즐겨찾기 버튼
     font_ = font.Font(window, size=30, weight='bold', family='Consolas')
     b_back = Button(new_canvas, text='◀', font=font_, command=closeBook, width=3, height=0)
     new_canvas.create_window(185, 585, anchor='nw', window=b_back)
     b_favorite = Button(new_canvas, text='☆', font=font_, command=addFavorites, width=3, height=0)
     new_canvas.create_window(295, 585, anchor='nw', window=b_favorite)
-def closeBook():  # 책 상세정보창 닫기
+def closeBook():    # 책 상세정보창 닫기
     global new_myframe, new_canvas, b_menu
     for b in b_menu:
         b['state'] = 'normal'
     new_myframe.destroy()
     new_canvas.destroy()
-def addFavorites():  # 책 즐겨찾기에 추가
+def addFavorites():     # 책 즐겨찾기에 추가
     pass
-################################################################
-# home
-################################################################
-def menuHome():
+def menuHome():         # 메뉴 중 홈버튼 클릭 시 호출
     global scene, b_menu
     if scene != 'home':     # home이 아닌 scene에서 home 버튼을 누르면 객체들 삭제 후 home 생성
         for obj in objects:
@@ -81,7 +78,7 @@ def menuHome():
         for i in range(4):
             b_menu[i]['bg'] = default_color
         b_menu[0]['bg'] = selected_color
-def menuSearch():
+def menuSearch():       # 메뉴 중 검색버튼 클릭 시 호출
     global scene, b_menu
     if scene != 'search':     # search가 아닌 scene에서 search 버튼을 누르면 객체들 삭제 후 search 생성
         for obj in objects:
@@ -91,7 +88,7 @@ def menuSearch():
         for i in range(4):
             b_menu[i]['bg'] = default_color
         b_menu[1]['bg'] = selected_color
-def menuFavorites():
+def menuFavorites():    # 메뉴 중 즐겨찾기버튼 클릭 시 호출
     global scene, b_menu
     if scene != 'favorites':     # favorites가 아닌 scene에서 favorites 버튼을 누르면 객체들 삭제 후 favorites 생성
         for obj in objects:
@@ -101,7 +98,7 @@ def menuFavorites():
         for i in range(4):
             b_menu[i]['bg'] = default_color
         b_menu[2]['bg'] = selected_color
-def menuLibrary():
+def menuLibrary():      # 메뉴 중 도서관버튼 클릭 시 호출
     global scene, b_menu
     if scene != 'library':     # library가 아닌 scene에서 library 버튼을 누르면 객체들 삭제 후 library 생성
         for obj in objects:
@@ -111,57 +108,7 @@ def menuLibrary():
         for i in range(4):
             b_menu[i]['bg'] = default_color
         b_menu[3]['bg'] = selected_color
-def Init_topLabel():
-    font_ = font.Font(window, size=30, weight='bold', family='Consolas')
-    topLabel = Label(window, text='Bestseller', font=font_)
-    topLabel.place(x=185, y=20)
-
-    objects.append(topLabel)
-def Init_basicBooks():
-    myframe = Frame(window)
-    myframe.place(x=20, y=100)
-    scrollbar = Scrollbar(myframe)
-    scrollbar.pack(side=RIGHT, fill=Y)
-    canvas = Canvas(myframe, bg='white', width=540, height=540, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2050))
-    canvas.pack()
-    scrollbar.config(command=canvas.yview)
-
-    # 나중에 데이터로 대체
-    #################################
-    urlList = ['https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
-               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
-               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
-               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831']
-    imageList = []
-    for url in urlList:
-        imageList.append(func.getImage(url))
-
-    tmp_titleList = ['편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)']
-    titleList = []
-    for t in tmp_titleList:
-        titleList.append(func.changeTitle(t))
-    #################################
-
-    y_distance = 290
-    font_ = font.Font(window, size=17, weight='bold', family='Consolas')
-    key = list(categoryDict.keys())
-    for i in range(7):
-        label = Label(canvas, text=key[i], font=font_, width=15)
-        canvas.create_window(20, 15+y_distance*i, anchor='nw', window=label)
-
-    font_ = font.Font(window, size=13, weight='normal', family='Consolas')
-    for i in range(7):
-        for j in range(4):
-            button = Button(canvas, image=imageList[j], command=openBook, width=90, height=130)
-            button.image = imageList[j]  # 해줘야 이미지 뜸
-            canvas.create_window(30+130*j, 65+y_distance*i, anchor='nw', window=button)
-
-            label = Label(canvas, text=titleList[j], font=font_, width=12, height=3)
-            canvas.create_window(30-9+130*j, 210+y_distance*i, anchor='nw', window=label)
-
-    objects.append(canvas)
-    objects.append(myframe)
-def Init_menuButton():
+def Init_menuButton():      # 하단의 메뉴(홈,검색,즐겨찾기,도서관) 버튼 생성
     global b_menu
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 10, 2
@@ -175,10 +122,51 @@ def Init_menuButton():
     b_menu[1].place(x=b_x+150, y=b_y)
     b_menu[2].place(x=b_x+300, y=b_y)
     b_menu[3].place(x=b_x+450, y=b_y)
+################################################################
+# home
+################################################################
+def Init_topLabel():
+    font_ = font.Font(window, size=30, weight='bold', family='Consolas')
+    topLabel = Label(window, text='Bestseller', font=font_)
+    topLabel.place(x=185, y=20)
+
+    objects.append(topLabel)
+def Init_basic_bookList():
+    myframe = Frame(window)
+    myframe.place(x=20, y=100)
+    scrollbar = Scrollbar(myframe)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    canvas = Canvas(myframe, bg='white', width=540, height=540, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2050))
+    canvas.pack()
+    scrollbar.config(command=canvas.yview)
+
+    y_distance = 290    # 분야별 간격
+    categoryList = list(categoryDict.keys())    # 분야 한글 리스트
+
+    for i in range(7):
+        # 분야 7가지 라벨
+        font_ = font.Font(window, size=17, weight='bold', family='Consolas')    # 분야 라벨 폰트
+        label = Label(canvas, text=categoryList[i], font=font_, width=15)
+        canvas.create_window(20, 15 + y_distance * i, anchor='nw', window=label)
+
+        font_ = font.Font(window, size=13, weight='normal', family='Consolas')  # 제목 라벨 폰트
+        bookList = getBook('d_catg', str(list(categoryDict.values())[i]), 4)
+        for j in range(4):  # 분야별 4권 책 이미지(버튼), 제목(라벨)
+            # 분야별 책 이미지 버튼
+            img = func.getImage(bookList[j].image)
+            button = Button(canvas, image=img, command=partial(openBook, bookList[j]), width=90, height=130)
+            button.image = img  # 해줘야 이미지 뜸
+            canvas.create_window(30+130*j, 65+y_distance*i, anchor='nw', window=button)
+            # 분야별 책 제목
+            label = Label(canvas, text=func.changeTitle(bookList[j].title), font=font_, width=12, height=3)
+            canvas.create_window(30-9+130*j, 210+y_distance*i, anchor='nw', window=label)
+
+    objects.append(canvas)
+    objects.append(myframe)
 def Init_Scene_Home():
-    Init_topLabel()
-    Init_basicBooks()
-    Init_menuButton()
+    Init_topLabel()     # 상단의 프로그램명 생성
+    Init_basic_bookList()   # 대표분야 7가지에 대한 추천 책 4권씩 생성
+    Init_menuButton()   # 하단의 메뉴(홈,검색,즐겨찾기,도서관)버튼 생성
 ################################################################
 # search
 ################################################################
@@ -209,7 +197,7 @@ def searchTitle():      # 제목 검색
         objects.remove(e_search)
     search_state = 'title'
     Init_searchEntry()
-def Init_Combobox():
+def Init_Combobox():    # 분야 검색에 쓰이는 콥보박스 생성
     global combobox
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
     lst = []
@@ -222,7 +210,7 @@ def Init_Combobox():
     window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
 
     objects.append(combobox)
-def Init_searchEntry():
+def Init_searchEntry():     # 저자, 제목 검색에 쓰이는 엔트리
     global e_search, search_state
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
     key = StringVar()
@@ -232,13 +220,36 @@ def Init_searchEntry():
     e_search.place(x=80, y=150, width=350, height=30)
 
     objects.append(e_search)
-def searchBook():
+def searchBook():   # 키워드값을 가지고 책 리스트를 만듬
     global search_state
     if search_state == 'category':  # 검색 키워드 get
         keyword = combobox.get()
     else:
         keyword = e_search.get()
-    print(keyword)
+    # print(keyword)
+    # 최대 16권의 검색 결과를 갖는 북 리스트 생성
+    if search_state == 'category':
+        bookList = getBook("d_catg", str(categoryDict[keyword]), 16)
+    elif search_state == 'author':
+        bookList = getBook("d_auth", keyword, 16)
+    elif search_state == 'title':
+        bookList = getBook("d_titl", keyword, 16)
+    showBookList(bookList)
+def showBookList(bookList): # 최대 16권의 겸색 결과를 화면에 띄움
+    global book_Canvas
+    y_distance = 220
+    font_ = font.Font(window, size=13, weight='normal', family='Consolas')
+    i = 0
+    for book in bookList:
+        # 검색된 책 이미지 버튼
+        img = func.getImage(book.image)
+        button = Button(book_Canvas, image=img, command=partial(openBook, book), width=90, height=130)
+        button.image = img  # 해줘야 이미지 뜸
+        book_Canvas.create_window(30+130*(i%4), 15+y_distance*(i//4), anchor='nw', window=button)
+        # 검색된 책 제목 라벨
+        label = Label(book_Canvas, text=func.changeTitle(book.title), font=font_, width=12, height=3)
+        book_Canvas.create_window(30-9+130*(i%4), 160+y_distance*(i//4), anchor='nw', window=label)
+        i += 1
 def Init_threeButtons():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 8, 2
@@ -261,63 +272,25 @@ def Init_searchKeyword():
     b_search.place(x=450, y=144)
 
     objects.append(b_search)
-def Init_bookList():
+def Init_booklistFrame():
+    global book_Canvas
     myframe = Frame(window)
     myframe.pack()
     myframe.place(x=20, y=200)
     scrollbar = Scrollbar(myframe)
     scrollbar.pack(side=RIGHT, fill=Y)
-    canvas = Canvas(myframe, bg='white', width=540, height=440, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 900))
-    canvas.pack()
-    scrollbar.config(command=canvas.yview)
+    book_Canvas = Canvas(myframe, bg='white', width=540, height=440, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 900))
+    book_Canvas.pack()
+    scrollbar.config(command=book_Canvas.yview)
 
-    # 나중에 데이터로 대체
-    #################################
-    urlList = ['https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
-               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
-               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
-               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831',
-               'https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
-               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
-               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
-               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831',
-               'https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
-               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
-               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
-               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831',
-               'https://bookthumb-phinf.pstatic.net/cover/118/380/11838072.jpg?type=m1&amp;udate=20210322',
-               'https://bookthumb-phinf.pstatic.net/cover/000/051/00005151.jpg?type=m1&amp;udate=20200416',
-               'https://bookthumb-phinf.pstatic.net/cover/137/859/13785981.jpg?type=m1&amp;udate=20201104',
-               'https://bookthumb-phinf.pstatic.net/cover/030/248/03024873.jpg?type=m1&amp;udate=20190831']
-    imageList = []
-    for url in urlList:
-        imageList.append(func.getImage(url))
-    tmp_titleList = ['편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)',
-                     '편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)',
-                     '편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)',
-                     '편지', '11문자 살인사건', '브루투스의 심장 (완전범죄 살인릴레이)가나다라마', '마력의 태동 (라플라스의 탄생)']
-    titleList = []
-    for t in tmp_titleList:
-        titleList.append(func.changeTitle(t))
-    #################################
-    y_distance = 220
-    font_ = font.Font(window, size=13, weight='normal', family='Consolas')
-    for i in range(16):
-        button = Button(canvas, image=imageList[i], command=openBook, width=90, height=130)
-        button.image = imageList[i]  # 해줘야 이미지 뜸
-        canvas.create_window(30+130*(i%4), 15+y_distance*(i//4), anchor='nw', window=button)
-
-        label = Label(canvas, text=titleList[i], font=font_, width=12, height=3)
-        canvas.create_window(30-9+130*(i%4), 160+y_distance*(i//4), anchor='nw', window=label)
-
-    objects.append(canvas)
+    objects.append(book_Canvas)
     objects.append(myframe)
 def Init_Scene_Search():
     global search_state
     search_state = 'category'   # 디폴트 - 분야별 검색
     Init_threeButtons()     # 분야, 저자, 제목 버튼 생성
     Init_searchKeyword()  # 검색 키워드 입력받는 combobox(분야) 또는 entry(저자,제목) 생성 & 검색 버튼 생성 / 디폴트 - 분야 검색
-    Init_bookList()  # 검색에 따라 추천하는 책들 띄우기
+    Init_booklistFrame()  # 검색에 따라 추천하는 책들 띄울 프레임 생성
 ################################################################
 # favorites
 ################################################################
@@ -328,6 +301,7 @@ def Init_Scene_Favorites():
 ################################################################
 def Init_Scene_Library():
     pass
+
 window = Tk()
 window.title('Bestseller')
 window.geometry('600x750+450+30')

@@ -39,5 +39,6 @@ def getBook(typeOfBooks, encText, NumOfBooks):  # type(d_titl, d_auth, d_catg) /
                 book_ = book.Book()
                 book_.setData(bookDataList[i])
                 bookList.append(book_)
+            conn.close()
             return bookList
     conn.close()
