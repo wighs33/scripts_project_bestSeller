@@ -226,14 +226,14 @@ def searchBook():   # 키워드값을 가지고 책 리스트를 만듬
         keyword = combobox.get()
     else:
         keyword = e_search.get()
-    print(keyword)
+    # print(keyword)
     # 최대 16권의 검색 결과를 갖는 북 리스트 생성
-    if search_state == 'title':
-        bookList = getBook("d_titl", keyword, 16)
     if search_state == 'category':
         bookList = getBook("d_catg", str(categoryDict[keyword]), 16)
-    if search_state == 'author':
+    elif search_state == 'author':
         bookList = getBook("d_auth", keyword, 16)
+    elif search_state == 'title':
+        bookList = getBook("d_titl", keyword, 16)
     showBookList(bookList)
 def showBookList(bookList): # 최대 16권의 겸색 결과를 화면에 띄움
     global book_Canvas
