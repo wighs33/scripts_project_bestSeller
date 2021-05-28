@@ -319,7 +319,17 @@ def Init_threeButtons2():
     objects.append(b_telegram)
     objects.append(b_graph)
 def Init_favorite_bookList():
-    pass
+    myframe = Frame(window)
+    myframe.pack()
+    myframe.place(x=20, y=150)
+    scrollbar = Scrollbar(myframe)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    canvas = Canvas(myframe, bg='white', width=540, height=490, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2430))
+    canvas.pack()
+    scrollbar.config(command=canvas.yview)
+
+    objects.append(canvas)
+    objects.append(myframe)
 def Init_Scene_Favorites():
     Init_threeButtons2()  # 이메일, 텔레그램, 그래프 버튼 생성
     Init_favorite_bookList()  # 즐겨찾기 리스트에 있는 책들 띄울 프레임 생성
