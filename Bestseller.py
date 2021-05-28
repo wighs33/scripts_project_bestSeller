@@ -221,12 +221,15 @@ def Init_searchEntry():     # 저자, 제목 검색에 쓰이는 엔트리
 
     objects.append(e_search)
 def searchBook():   # 키워드값을 가지고 책 리스트를 만듬
-    global search_state
+    global search_state, book_Canvas
+    # 검색버튼 클릭시 캔버스 지우고 다시 생성
+    book_Canvas.destroy()
+    Init_booklistFrame()
+
     if search_state == 'category':  # 검색 키워드 get
         keyword = combobox.get()
     else:
         keyword = e_search.get()
-    # print(keyword)
     # 최대 16권의 검색 결과를 갖는 북 리스트 생성
     if search_state == 'category':
         bookList = getBook("d_catg", str(categoryDict[keyword]), 16)
@@ -240,6 +243,7 @@ def showBookList(bookList): # 최대 16권의 겸색 결과를 화면에 띄움
     y_distance = 220
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
     i = 0
+
     for book in bookList:
         # 검색된 책 이미지 버튼
         img = func.getImage(book.image)
@@ -305,6 +309,7 @@ def Init_Scene_Library():
 window = Tk()
 window.title('Bestseller')
 window.geometry('600x750+450+30')
+#window.configure(bg='red')
 
 objects = []    # state 전환시 삭제될 객체들 보관
 
