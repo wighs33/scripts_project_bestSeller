@@ -29,8 +29,12 @@ def getBook(typeOfBooks, encText, NumOfBooks):  # type(d_titl, d_auth, d_catg) /
             rssList = parseData.childNodes
             channelList = rssList[0].childNodes
             item = channelList[0]
-
             subitems = item.childNodes
+
+            total = int(subitems[4].firstChild.nodeValue)  # 4번 - total(검색 결과)
+            if total < NumOfBooks:  # 검색결과(total)가 출력을 원하는 개수(NumOfBooks)보다 작으면 검색결과만큼만 책 반환
+                NumOfBooks = total
+
             bookDataList = []
             for i in range(7, 7 + NumOfBooks):
                 bookDataList.append(subitems[i].childNodes)
