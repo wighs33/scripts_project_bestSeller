@@ -298,8 +298,31 @@ def Init_Scene_Search():
 ################################################################
 # favorites
 ################################################################
-def Init_Scene_Favorites():
+def sendEmail():    # 이메일 보내기
     pass
+def sendTelegram():     # 텔레그램 보내기
+    pass
+def showGraph():    # 그래프 보여주기
+    pass
+def Init_threeButtons2():
+    font_ = font.Font(window, size=20, weight='bold', family='Consolas')
+    b_width, b_height = 8, 2
+    b_x, b_y = 55, 30
+    b_email = Button(window, text="이메일", command=sendEmail, font=font_, width=b_width, height=b_height)
+    b_telegram = Button(window, text="텔레그램", command=sendTelegram, font=font_, width=b_width, height=b_height)
+    b_graph = Button(window, text="그래프", command=showGraph, font=font_, width=b_width, height=b_height)
+    b_email.place(x=b_x, y=b_y)
+    b_telegram.place(x=b_x+180, y=b_y)
+    b_graph.place(x=b_x+360, y=b_y)
+
+    objects.append(b_email)
+    objects.append(b_telegram)
+    objects.append(b_graph)
+def Init_favorite_bookList():
+    pass
+def Init_Scene_Favorites():
+    Init_threeButtons2()  # 이메일, 텔레그램, 그래프 버튼 생성
+    Init_favorite_bookList()  # 즐겨찾기 리스트에 있는 책들 띄울 프레임 생성
 ################################################################
 # library
 ################################################################
