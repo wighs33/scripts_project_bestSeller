@@ -338,7 +338,7 @@ def Init_favorite_bookList():
         canvas.create_window(15, 20 + y_distance * i, anchor='nw', window=button)
         # 책 info1
         font_ = font.Font(window, size=13, weight='normal', family='Consolas')  # 책 info1 라벨 폰트
-        info1 = '제목: '+func.changeText(favorite_bookList[i].title)+'\n저자: '+func.changeText(favorite_bookList[i].author)
+        info1 = '제목: '+func.changeText_long(favorite_bookList[i].title)+'\n저자: '+func.changeText_long(favorite_bookList[i].author)
         l_bookInfo1 = Label(canvas, text=info1, font=font_, width=44, height=5, anchor='w', justify=LEFT)
         canvas.create_window(125, 15 + y_distance * i, anchor='nw', window=l_bookInfo1)
 
