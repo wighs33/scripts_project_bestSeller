@@ -36,24 +36,6 @@ def changeTitle(title):     # 책 제목 라벨 크키에 맞게 변경
     if over is False:
         c_title += title
     return c_title
-def changeTitleOfDetail(title):     # 책 제목 라벨 크키에 맞게 변경
-    c_title = ''
-    line = 1
-    over = False
-    while len(title) > 15:
-        if line == 3:
-            over = True
-            c_title += title[:12]
-            c_title += '...'
-            break
-        else:
-            c_title += title[:15]
-            c_title += '\n'
-            title = title[15:]
-            line += 1
-    if over is False:
-        c_title += title
-    return c_title
 def changeText(text):     # 책 상세정보에서 제목, 저자 크키에 맞게 변경 (최대 30자까지 가능)
     c_text = ''
     if len(text) > 14:
