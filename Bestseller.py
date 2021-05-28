@@ -341,6 +341,12 @@ def Init_favorite_bookList():
         info1 = '제목: '+func.changeText_long(favorite_bookList[i].title)+'\n저자: '+func.changeText_long(favorite_bookList[i].author)
         l_bookInfo1 = Label(canvas, text=info1, font=font_, width=44, height=5, anchor='w', justify=LEFT)
         canvas.create_window(125, 15 + y_distance * i, anchor='nw', window=l_bookInfo1)
+        # 책 info2
+        font_ = font.Font(window, size=8, weight='normal', family='Consolas')  # 책 info2 라벨 폰트
+        info2 = '책 정보 링크\n' + favorite_bookList[i].link
+        l_bookInfo2 = Label(canvas, text=info2, font=font_, width=66, height=3, anchor='w', justify=LEFT, fg='blue', cursor='hand2')
+        l_bookInfo2.bind('<Button-1>', lambda e: func.callback(favorite_bookList[i].link))
+        canvas.create_window(125, 115 + y_distance * i, anchor='nw', window=l_bookInfo2)
 
     objects.append(canvas)
     objects.append(myframe)
