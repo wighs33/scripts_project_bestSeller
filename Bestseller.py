@@ -299,8 +299,43 @@ def Init_Scene_Favorites():
 ################################################################
 # library
 ################################################################
+def addressSearch():     # 주소엔트리, 검색버튼
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    key = StringVar()
+    key.set('주소 입력')
+    addressEntry = Entry(window, textvariable=key, justify=LEFT, font=font_)
+    addressEntry.pack()
+    addressEntry.place(x=80, y=80, width=350, height=30)
+
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    searchButton = Button(window, text="검색", command=showAddressList, font=font_, width=5)
+    searchButton.pack()
+    searchButton.place(x=450, y=74)
+
+def showAddressList():
+    global addressCanvas
+    myframe = Frame(window)
+    myframe.pack()
+    myframe.place(x=20, y=200)
+    scrollbar = Scrollbar(myframe)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    addressCanvas = Canvas(myframe, bg='white', width=400, height=440, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 900))
+    addressCanvas.pack()
+    scrollbar.config(command=addressCanvas.yview)
+
+    objects.append(addressCanvas)
+    objects.append(myframe)
+
+def mapButton():
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    searchButton = Button(window, text="검색", command=searchBook, font=font_, width=5)
+    searchButton.pack()
+    searchButton.place(x=450, y=74)
+
+    objects.append(searchButton)
 def Init_Scene_Library():
-    pass
+    addressSearch()
+    showAddressList()
 
 window = Tk()
 window.title('Bestseller')
