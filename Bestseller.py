@@ -329,6 +329,19 @@ def Init_favorite_bookList():
     canvas.pack()
     scrollbar.config(command=canvas.yview)
 
+    y_distance = 160
+    for i in range(len(favorite_bookList)):     # 즐겨찾기된 책 이미지(버튼), info(라벨)
+        # 책 이미지 버튼
+        img = func.getImage(favorite_bookList[i].image)
+        button = Button(canvas, image=img, command=partial(openBook, favorite_bookList[i]), width=90, height=130)
+        button.image = img  # 해줘야 이미지 뜸
+        canvas.create_window(15, 20 + y_distance * i, anchor='nw', window=button)
+        # 책 info1
+        font_ = font.Font(window, size=13, weight='normal', family='Consolas')  # 책 info1 라벨 폰트
+        info1 = '제목: '+func.changeText(favorite_bookList[i].title)+'\n저자: '+func.changeText(favorite_bookList[i].author)
+        l_bookInfo1 = Label(canvas, text=info1, font=font_, width=44, height=5, anchor='w', justify=LEFT)
+        canvas.create_window(125, 15 + y_distance * i, anchor='nw', window=l_bookInfo1)
+
     objects.append(canvas)
     objects.append(myframe)
 def Init_Scene_Favorites():
