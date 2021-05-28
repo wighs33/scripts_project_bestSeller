@@ -67,7 +67,8 @@ def closeBook():    # 책 상세정보창 닫기
     new_myframe.destroy()
     new_canvas.destroy()
 def addFavorites():     # 책 즐겨찾기에 추가
-    pass
+    global favorite_bookList
+    favorite_bookList.append(book)
 def menuHome():         # 메뉴 중 홈버튼 클릭 시 호출
     global scene, b_menu
     if scene != 'home':     # home이 아닌 scene에서 home 버튼을 누르면 객체들 삭제 후 home 생성
@@ -345,8 +346,9 @@ window.geometry('600x750+450+30')
 #window.configure(bg='red')
 
 objects = []    # state 전환시 삭제될 객체들 보관
-
 scene = 'home'  # 시작 scene = home
+favorite_bookList = []  # 즐겨찾기 책 리스트
+
 Init_Scene_Home()
 
 window.mainloop()
