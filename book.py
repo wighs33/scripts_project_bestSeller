@@ -13,9 +13,9 @@ class Book:
         self.title = re.sub('(<([^>]+)>)', '', data[0].firstChild.nodeValue)
         self.link = data[1].firstChild.nodeValue
         self.image = data[2].firstChild.nodeValue
-        self.author = data[3].firstChild.nodeValue
+        self.author = re.sub('(<([^>]+)>)', '', data[3].firstChild.nodeValue)
         self.price = data[4].firstChild.nodeValue
-        self.pubdates = data[7].firstChild.nodeValue
+        self.pubdate = data[7].firstChild.nodeValue
         if data[9].firstChild:
             self.description = re.sub('(<([^>]+)>)', '', data[9].firstChild.nodeValue)
         else:
