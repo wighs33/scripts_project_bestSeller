@@ -308,12 +308,21 @@ def Init_Scene_Search():
 # favorites
 ################################################################
 def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 생성
-    global mail_myframe, mail_canvas
+    global mail_myframe, mail_canvas, e_rAddr
     mail_myframe = Frame(window)
     mail_myframe.pack()
     mail_myframe.place(x=20, y=20)
     mail_canvas = Canvas(mail_myframe, bg='white', width=540, height=100)
     mail_canvas.pack()
+
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+
+    label = Label(mail_canvas, text='메일 주소 입력:', bg='white', font=font_, height=1)
+    mail_canvas.create_window(15, 38, anchor='nw', window=label)
+
+    key = StringVar()
+    e_rAddr = Entry(mail_canvas, textvariable=key, font=font_, width=25)
+    mail_canvas.create_window(180, 39, anchor='nw', window=e_rAddr)
 def sendMail():    # 이메일 보내기
     pass
 def sendTelegram():     # 텔레그램 보내기
