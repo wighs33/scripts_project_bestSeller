@@ -327,9 +327,19 @@ def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 �
 
     button = Button(mail_canvas, text='전송', command=send_Mail, bg='white', font=font_, height=1)
     mail_canvas.create_window(470, 33, anchor='nw', window=button)
+
+    font_ = font.Font(window, size=10, weight='normal', family='Consolas')
+
+    b_close = Button(mail_canvas, text='X', bg='red', command=closeMail, font=font_)
+    mail_canvas.create_window(523, 0, anchor='nw', window=b_close)
+
 def send_Mail():    # 전송버튼 클릭 시 이메일 보내기, 창 닫기
     global mail_myframe, mail_canvas, e_rAddr
     gmail.sendMail(favorite_bookList, e_rAddr.get())
+    mail_myframe.destroy()
+    mail_canvas.destroy()
+def closeMail():    # 메일 주소 입력창 닫기
+    global mail_myframe, mail_canvas
     mail_myframe.destroy()
     mail_canvas.destroy()
 def sendTelegram():     # 텔레그램 보내기
