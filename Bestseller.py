@@ -307,7 +307,14 @@ def Init_Scene_Search():
 ################################################################
 # favorites
 ################################################################
-def sendEmail():    # 이메일 보내기
+def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 생성
+    global mail_myframe, mail_canvas
+    mail_myframe = Frame(window)
+    mail_myframe.pack()
+    mail_myframe.place(x=20, y=20)
+    mail_canvas = Canvas(mail_myframe, bg='white', width=540, height=100)
+    mail_canvas.pack()
+def sendMail():    # 이메일 보내기
     pass
 def sendTelegram():     # 텔레그램 보내기
     pass
@@ -317,7 +324,7 @@ def Init_threeButtons2():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 8, 2
     b_x, b_y = 55, 30
-    b_email = Button(window, text="이메일", command=sendEmail, font=font_, width=b_width, height=b_height)
+    b_email = Button(window, text="이메일", command=Init_mailaddressEntry, font=font_, width=b_width, height=b_height)
     b_telegram = Button(window, text="텔레그램", command=sendTelegram, font=font_, width=b_width, height=b_height)
     b_graph = Button(window, text="그래프", command=showGraph, font=font_, width=b_width, height=b_height)
     b_email.place(x=b_x, y=b_y)
