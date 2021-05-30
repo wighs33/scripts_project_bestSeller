@@ -4,6 +4,7 @@ import tkinter.ttk
 from functools import partial
 import func
 from openAPI import *
+import gmail
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -323,8 +324,14 @@ def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 �
     key = StringVar()
     e_rAddr = Entry(mail_canvas, textvariable=key, font=font_, width=25)
     mail_canvas.create_window(180, 39, anchor='nw', window=e_rAddr)
-def sendMail():    # 이메일 보내기
-    pass
+
+    button = Button(mail_canvas, text='전송', command=send_Mail, bg='white', font=font_, height=1)
+    mail_canvas.create_window(470, 33, anchor='nw', window=button)
+def send_Mail():    # 전송버튼 클릭 시 이메일 보내기, 창 닫기
+    global mail_myframe, mail_canvas, e_rAddr
+    gmail.sendMail(favorite_bookList, e_rAddr.get())
+    mail_myframe.destroy()
+    mail_canvas.destroy()
 def sendTelegram():     # 텔레그램 보내기
     pass
 def showGraph():    # 그래프 보여주기
