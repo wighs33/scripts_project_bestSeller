@@ -2,6 +2,7 @@
 import smtplib
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
+import func
 
 def makeText(bookList):
     text = ''
@@ -9,7 +10,7 @@ def makeText(bookList):
         text += '<br><img src='+bookList[i].image+'/>'
         text += '<p><br>제목: '+bookList[i].title+'<br>'
         text += '<br>저자: '+bookList[i].author+'<br>'
-        text += '<br>출간일: '+bookList[i].pubdate+'<br>'
+        text += '<br>출간일: '+func.changeDate(bookList[i].pubdate)+'<br>'
         text += '<br>가격: '+bookList[i].price+'원<br>'
         text += '<br>줄거리: '+bookList[i].description+'<br>'
         text += '<br>링크(상세정보): '+bookList[i].link+'<br>'
@@ -44,43 +45,3 @@ def sendMail(bookList, rAddr):
     s.login(senderAddr, "best802seller!")
     s.sendmail(senderAddr, [recipientAddr], msg.as_string())
     s.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
