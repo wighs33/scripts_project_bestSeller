@@ -42,3 +42,7 @@ def getBook(typeOfBooks, encText, NumOfBooks):  # type(d_titl, d_auth, d_catg) /
             conn.close()
             return bookList
     conn.close()
+
+
+
+# getBook("d_titl", "인간", 16)

@@ -312,6 +312,9 @@ def addressSearch():     # 주소엔트리, 검색버튼
     searchButton.pack()
     searchButton.place(x=450, y=74)
 
+    objects.append(addressEntry)
+    objects.append(searchButton)
+
 def showAddressList():
     global addressCanvas
     myframe = Frame(window)
