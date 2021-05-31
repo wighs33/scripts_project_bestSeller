@@ -73,7 +73,13 @@ def closeBook():    # 책 상세정보창 닫기
     new_canvas.destroy()
 def addFavorites(book):     # 책 즐겨찾기에 추가
     global favorite_bookList
-    favorite_bookList.append(book)
+    has = False
+    for b in favorite_bookList:
+        if b.title == book.title:
+            has = True
+            break
+    if not has:
+        favorite_bookList.append(book)
 def removeFavorites(book):     # 책 즐겨찾기에서 삭제
     global favorite_bookList
     favorite_bookList.remove(book)
@@ -333,6 +339,8 @@ def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 �
     b_close = Button(mail_canvas, text='X', bg='red', command=closeMail, font=font_)
     mail_canvas.create_window(523, 0, anchor='nw', window=b_close)
 
+    objects.append(mail_myframe)
+    objects.append(mail_canvas)
 def send_Mail():    # 전송버튼 클릭 시 이메일 보내기, 창 닫기
     global mail_myframe, mail_canvas, e_rAddr
     gmail.sendMail(favorite_bookList, e_rAddr.get())
