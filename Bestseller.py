@@ -4,6 +4,7 @@ import tkinter.ttk
 from functools import partial
 import func
 from openAPI import *
+import gmail
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -14,7 +15,7 @@ default_color = 'light grey'    # 선택되지 않은 menu 버튼 색상
 ################################################################
 # common
 ################################################################'
-def openBook(book):     # 책 상세정보창 열기
+def openBook(book, favorite):     # 책 상세정보창 열기  / 즐겨찾기된 책을 열면 favorite = True 아니면 False
     global new_myframe, new_canvas, b_menu
     for b in b_menu:
         b['state'] = 'disabled'
@@ -54,11 +55,15 @@ def openBook(book):     # 책 상세정보창 열기
     l_bookInfo3.bind('<Button-1>', lambda e: func.callback(book.link))
     new_canvas.create_window(35, 510, anchor='nw', window=l_bookInfo3)
 
-    # 뒤로가기, 즐겨찾기 버튼
+    # 뒤로가기 버튼
     font_ = font.Font(window, size=30, weight='bold', family='Consolas')
     b_back = Button(new_canvas, text='◀', font=font_, command=closeBook, width=3, height=0)
     new_canvas.create_window(185, 625, anchor='nw', window=b_back)
-    b_favorite = Button(new_canvas, text='☆', font=font_, command=addFavorites, width=3, height=0)
+    # 즐겨찾기 버튼
+    if favorite:    # 즐겨찾기된 책
+        b_favorite = Button(new_canvas, text='-', font=font_, command=partial(removeFavorites, book), width=3, height=0)
+    else:       # 즐겨찾기되지 않은 책
+        b_favorite = Button(new_canvas, text='+', font=font_, command=partial(addFavorites, book), width=3, height=0)
     new_canvas.create_window(295, 625, anchor='nw', window=b_favorite)
 def closeBook():    # 책 상세정보창 닫기
     global new_myframe, new_canvas, b_menu
@@ -66,8 +71,13 @@ def closeBook():    # 책 상세정보창 닫기
         b['state'] = 'normal'
     new_myframe.destroy()
     new_canvas.destroy()
-def addFavorites():     # 책 즐겨찾기에 추가
-    pass
+def addFavorites(book):     # 책 즐겨찾기에 추가
+    global favorite_bookList
+    favorite_bookList.append(book)
+def removeFavorites(book):     # 책 즐겨찾기에서 삭제
+    global favorite_bookList
+    favorite_bookList.remove(book)
+# 하단 메뉴버튼 4개(홈, 검색, 즐겨찾기, 도서관)
 def menuHome():         # 메뉴 중 홈버튼 클릭 시 호출
     global scene, b_menu
     if scene != 'home':     # home이 아닌 scene에서 home 버튼을 누르면 객체들 삭제 후 home 생성
@@ -154,7 +164,7 @@ def Init_basic_bookList():
         for j in range(4):  # 분야별 4권 책 이미지(버튼), 제목(라벨)
             # 분야별 책 이미지 버튼
             img = func.getImage(bookList[j].image)
-            button = Button(canvas, image=img, command=partial(openBook, bookList[j]), width=90, height=130)
+            button = Button(canvas, image=img, command=partial(openBook, bookList[j], False), width=90, height=130)
             button.image = img  # 해줘야 이미지 뜸
             canvas.create_window(30+130*j, 65+y_distance*i, anchor='nw', window=button)
             # 분야별 책 제목
@@ -221,12 +231,15 @@ def Init_searchEntry():     # 저자, 제목 검색에 쓰이는 엔트리
 
     objects.append(e_search)
 def searchBook():   # 키워드값을 가지고 책 리스트를 만듬
-    global search_state
+    global search_state, book_Canvas
+    # 검색버튼 클릭시 캔버스 지우고 다시 생성
+    book_Canvas.destroy()
+    Init_booklistFrame()
+
     if search_state == 'category':  # 검색 키워드 get
         keyword = combobox.get()
     else:
         keyword = e_search.get()
-    # print(keyword)
     # 최대 16권의 검색 결과를 갖는 북 리스트 생성
     if search_state == 'category':
         bookList = getBook("d_catg", str(categoryDict[keyword]), 16)
@@ -240,17 +253,18 @@ def showBookList(bookList): # 최대 16권의 겸색 결과를 화면에 띄움
     y_distance = 220
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
     i = 0
+
     for book in bookList:
         # 검색된 책 이미지 버튼
         img = func.getImage(book.image)
-        button = Button(book_Canvas, image=img, command=partial(openBook, book), width=90, height=130)
+        button = Button(book_Canvas, image=img, command=partial(openBook, book, False), width=90, height=130)
         button.image = img  # 해줘야 이미지 뜸
         book_Canvas.create_window(30+130*(i%4), 15+y_distance*(i//4), anchor='nw', window=button)
         # 검색된 책 제목 라벨
         label = Label(book_Canvas, text=func.changeTitle(book.title), font=font_, width=12, height=3)
         book_Canvas.create_window(30-9+130*(i%4), 160+y_distance*(i//4), anchor='nw', window=label)
         i += 1
-def Init_threeButtons():
+def Init_threeButtons1():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 8, 2
     b_x, b_y = 55, 30
@@ -288,14 +302,98 @@ def Init_booklistFrame():
 def Init_Scene_Search():
     global search_state
     search_state = 'category'   # 디폴트 - 분야별 검색
-    Init_threeButtons()     # 분야, 저자, 제목 버튼 생성
+    Init_threeButtons1()     # 분야, 저자, 제목 버튼 생성
     Init_searchKeyword()  # 검색 키워드 입력받는 combobox(분야) 또는 entry(저자,제목) 생성 & 검색 버튼 생성 / 디폴트 - 분야 검색
     Init_booklistFrame()  # 검색에 따라 추천하는 책들 띄울 프레임 생성
 ################################################################
 # favorites
 ################################################################
-def Init_Scene_Favorites():
+def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 생성
+    global mail_myframe, mail_canvas, e_rAddr
+    mail_myframe = Frame(window)
+    mail_myframe.pack()
+    mail_myframe.place(x=20, y=20)
+    mail_canvas = Canvas(mail_myframe, bg='white', width=540, height=100)
+    mail_canvas.pack()
+
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+
+    label = Label(mail_canvas, text='메일 주소 입력:', bg='white', font=font_, height=1)
+    mail_canvas.create_window(15, 38, anchor='nw', window=label)
+
+    key = StringVar()
+    e_rAddr = Entry(mail_canvas, textvariable=key, font=font_, width=25)
+    mail_canvas.create_window(180, 39, anchor='nw', window=e_rAddr)
+
+    button = Button(mail_canvas, text='전송', command=send_Mail, bg='white', font=font_, height=1)
+    mail_canvas.create_window(470, 33, anchor='nw', window=button)
+
+    font_ = font.Font(window, size=10, weight='normal', family='Consolas')
+
+    b_close = Button(mail_canvas, text='X', bg='red', command=closeMail, font=font_)
+    mail_canvas.create_window(523, 0, anchor='nw', window=b_close)
+
+def send_Mail():    # 전송버튼 클릭 시 이메일 보내기, 창 닫기
+    global mail_myframe, mail_canvas, e_rAddr
+    gmail.sendMail(favorite_bookList, e_rAddr.get())
+    mail_myframe.destroy()
+    mail_canvas.destroy()
+def closeMail():    # 메일 주소 입력창 닫기
+    global mail_myframe, mail_canvas
+    mail_myframe.destroy()
+    mail_canvas.destroy()
+def sendTelegram():     # 텔레그램 보내기
     pass
+def showGraph():    # 그래프 보여주기
+    pass
+def Init_threeButtons2():
+    font_ = font.Font(window, size=20, weight='bold', family='Consolas')
+    b_width, b_height = 8, 2
+    b_x, b_y = 55, 30
+    b_email = Button(window, text="이메일", command=Init_mailaddressEntry, font=font_, width=b_width, height=b_height)
+    b_telegram = Button(window, text="텔레그램", command=sendTelegram, font=font_, width=b_width, height=b_height)
+    b_graph = Button(window, text="그래프", command=showGraph, font=font_, width=b_width, height=b_height)
+    b_email.place(x=b_x, y=b_y)
+    b_telegram.place(x=b_x+180, y=b_y)
+    b_graph.place(x=b_x+360, y=b_y)
+
+    objects.append(b_email)
+    objects.append(b_telegram)
+    objects.append(b_graph)
+def Init_favorite_bookList():
+    myframe = Frame(window)
+    myframe.pack()
+    myframe.place(x=20, y=150)
+    scrollbar = Scrollbar(myframe)
+    scrollbar.pack(side=RIGHT, fill=Y)
+    canvas = Canvas(myframe, bg='white', width=540, height=490, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2430))
+    canvas.pack()
+    scrollbar.config(command=canvas.yview)
+
+    y_distance = 160
+    for i in range(len(favorite_bookList)):     # 즐겨찾기된 책 이미지(버튼), info(라벨)
+        # 책 이미지 버튼
+        img = func.getImage(favorite_bookList[i].image)
+        button = Button(canvas, image=img, command=partial(openBook, favorite_bookList[i], True), width=90, height=130)
+        button.image = img  # 해줘야 이미지 뜸
+        canvas.create_window(15, 20 + y_distance * i, anchor='nw', window=button)
+        # 책 info1
+        font_ = font.Font(window, size=13, weight='normal', family='Consolas')  # 책 info1 라벨 폰트
+        info1 = '제목: '+func.changeText_long(favorite_bookList[i].title)+'\n저자: '+func.changeText_long(favorite_bookList[i].author)
+        l_bookInfo1 = Label(canvas, text=info1, font=font_, width=44, height=5, anchor='w', justify=LEFT)
+        canvas.create_window(125, 15 + y_distance * i, anchor='nw', window=l_bookInfo1)
+        # 책 info2
+        font_ = font.Font(window, size=8, weight='normal', family='Consolas')  # 책 info2 라벨 폰트
+        info2 = '책 정보 링크\n' + favorite_bookList[i].link
+        l_bookInfo2 = Label(canvas, text=info2, font=font_, width=66, height=3, anchor='w', justify=LEFT, fg='blue', cursor='hand2')
+        l_bookInfo2.bind('<Button-1>', lambda e: func.callback(favorite_bookList[i].link))
+        canvas.create_window(125, 115 + y_distance * i, anchor='nw', window=l_bookInfo2)
+
+    objects.append(canvas)
+    objects.append(myframe)
+def Init_Scene_Favorites():
+    Init_threeButtons2()  # 이메일, 텔레그램, 그래프 버튼 생성
+    Init_favorite_bookList()  # 즐겨찾기 리스트에 있는 책들 띄울 프레임 생성
 ################################################################
 # library
 ################################################################
@@ -343,10 +441,12 @@ def Init_Scene_Library():
 window = Tk()
 window.title('Bestseller')
 window.geometry('600x750+450+30')
+#window.configure(bg='red')
 
 objects = []    # state 전환시 삭제될 객체들 보관
-
 scene = 'home'  # 시작 scene = home
+favorite_bookList = []  # 즐겨찾기 책 리스트
+
 Init_Scene_Home()
 
 window.mainloop()

@@ -5,6 +5,8 @@ from PIL import Image, ImageTk
 import webbrowser
 
 def getImage(url):      # url로 해당 이미지 생성
+    if url == '':   # image가 없는 책의 경우
+        url = 'https://img.icons8.com/ios/452/no-image.png' # 이미지 없음 image
     with urllib.request.urlopen(url) as u:
         raw_data = u.read()
     im = Image.open(BytesIO(raw_data))
@@ -12,6 +14,8 @@ def getImage(url):      # url로 해당 이미지 생성
     image = ImageTk.PhotoImage(im)
     return image
 def getImage_Big(url):      # url로 해당 이미지 생성
+    if url == '':   # image가 없는 책의 경우
+        url = 'https://img.icons8.com/ios/452/no-image.png' # 이미지 없음 image
     with urllib.request.urlopen(url) as u:
         raw_data = u.read()
     im = Image.open(BytesIO(raw_data))
@@ -46,6 +50,19 @@ def changeText(text):     # 책 상세정보에서 제목, 저자 크키에 맞�
             c_text += text[:17]
             c_text += '\n'
             text = text[17:]
+    c_text += text
+    return c_text
+def changeText_long(text):     # 즐겨찾기에서 제목, 저자 크키에 맞게 변경 / 첫번째 줄은 22자 그 뒤부터는 한줄에 25자
+    c_text = ''
+    l = 22
+    if len(text) > l:
+        c_text += text[:l]
+        c_text += '\n'
+        text = text[l:]
+        while len(text) > l+3:
+            c_text += text[:l+3]
+            c_text += '\n'
+            text = text[l+3:]
     c_text += text
     return c_text
 def changeDescription(text):     # 책 상세정보에서 줄거리 크키에 맞게 줄넘김
