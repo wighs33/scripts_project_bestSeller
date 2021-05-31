@@ -60,9 +60,9 @@ def openBook(book, favorite):     # 책 상세정보창 열기  / 즐겨찾기�
     b_back = Button(new_canvas, text='◀', font=font_, command=closeBook, width=3, height=0)
     new_canvas.create_window(185, 625, anchor='nw', window=b_back)
     # 즐겨찾기 버튼
-    if favorite:    # 즐겨찾기된 책
+    if book.favorites:    # 즐겨찾기된 책
         b_favorite = Button(new_canvas, text='-', font=font_, command=partial(removeFavorites, book), width=3, height=0)
-    else:       # 즐겨찾기되지 않은 책
+    else:                 # 즐겨찾기되지 않은 책
         b_favorite = Button(new_canvas, text='+', font=font_, command=partial(addFavorites, book), width=3, height=0)
     new_canvas.create_window(295, 625, anchor='nw', window=b_favorite)
 def closeBook():    # 책 상세정보창 닫기
@@ -73,15 +73,11 @@ def closeBook():    # 책 상세정보창 닫기
     new_canvas.destroy()
 def addFavorites(book):     # 책 즐겨찾기에 추가
     global favorite_bookList
-    has = False
-    for b in favorite_bookList:
-        if b.title == book.title:
-            has = True
-            break
-    if not has:
-        favorite_bookList.append(book)
+    book.favorites = True
+    favorite_bookList.append(book)
 def removeFavorites(book):     # 책 즐겨찾기에서 삭제
     global favorite_bookList
+    book.favorites = False
     favorite_bookList.remove(book)
 # 하단 메뉴버튼 4개(홈, 검색, 즐겨찾기, 도서관)
 def menuHome():         # 메뉴 중 홈버튼 클릭 시 호출

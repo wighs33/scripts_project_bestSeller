@@ -9,6 +9,7 @@ class Book:
         self.price = ''
         self.pubdate = ''
         self.description = ''
+        self.favorites = False      # 즐겨찾기 여부
     def setData(self, data):
         self.title = re.sub('(<([^>]+)>)', '', data[0].firstChild.nodeValue)
         self.link = data[1].firstChild.nodeValue
