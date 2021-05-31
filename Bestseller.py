@@ -177,7 +177,7 @@ def Init_basic_bookList():
     objects.append(myframe)
 def Init_Scene_Home():
     Init_topLabel()     # 상단의 프로그램명 생성
-    Init_basic_bookList()   # 대표분야 7가지에 대한 추천 책 4권씩 생성
+    #Init_basic_bookList()   # 대표분야 7가지에 대한 추천 책 4권씩 생성
     Init_menuButton()   # 하단의 메뉴(홈,검색,즐겨찾기,도서관)버튼 생성
 ################################################################
 # search
@@ -359,6 +359,31 @@ def showGraph():    # 그래프 보여주기
     font_ = font.Font(window, size=16, weight='bold', family='Consolas')
     l_graph = Label(graph_canvas, bg='white', text='출간 연도별 차트', font=font_)
     l_graph.place(x=95, y=35)
+
+    data = {}
+    for b in favorite_bookList:
+        year = func.pubYear(b.pubdate)
+        if year not in data.keys():
+            data[year] = 1
+        else:
+            data[year] += 1
+
+    start = 0
+    s = sum(data.values())
+    x, y = 20, 100
+    l = 330
+    y_dist = 20
+    i = 0
+    font_ = font.Font(window, size=14, weight='normal', family='Consolas')
+    for key, value in data.items():
+        extent = value / s * 360
+        color = func.random_color()
+        graph_canvas.create_arc((x, y, x+l, y+l), fill=color, outline='white', start=start, extent=extent)
+        start = start + extent
+        graph_canvas.create_rectangle(x+l+25, y+20*i+y_dist*i, x+l+25+20, y+20*(i+1)+y_dist*i, fill=color)
+        label = Label(graph_canvas, text=key+'년도 - '+str(value)+'권', bg='white', font=font_)
+        label.place(x=x+l+55, y=y+20*i+y_dist*i-4)
+        i += 1
 
     font_ = font.Font(window, size=15, weight='normal', family='Consolas')
     b_close = Button(graph_canvas, text='X', bg='red', command=closeGraph, width=3, font=font_)
