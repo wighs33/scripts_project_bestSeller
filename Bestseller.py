@@ -356,6 +356,10 @@ def showGraph():    # 그래프 보여주기
     graph_canvas = Canvas(graph_myframe, bg='white', width=557, height=490)
     graph_canvas.pack()
 
+    font_ = font.Font(window, size=16, weight='bold', family='Consolas')
+    l_graph = Label(graph_canvas, bg='white', text='출간 연도별 차트', font=font_)
+    l_graph.place(x=95, y=35)
+
     font_ = font.Font(window, size=15, weight='normal', family='Consolas')
     b_close = Button(graph_canvas, text='X', bg='red', command=closeGraph, width=3, font=font_)
     graph_canvas.create_window(515, 2, anchor='nw', window=b_close)

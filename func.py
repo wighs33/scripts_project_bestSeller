@@ -95,3 +95,5 @@ def changeDate(date):   # 출간일 형식 YYYY/MM/DD 로 변경
     return c_date
 def callback(url):  # 하이퍼링크
     webbrowser.open_new(url)
+def pubYear(pubdate):  # 출간 연도 반환
+    return pubdate[:4]
