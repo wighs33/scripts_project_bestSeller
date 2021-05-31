@@ -349,7 +349,23 @@ def closeMail():    # 메일 주소 입력창 닫기
 def sendTelegram():     # 텔레그램 보내기
     pass
 def showGraph():    # 그래프 보여주기
-    pass
+    global graph_myframe, graph_canvas
+    graph_myframe = Frame(window)
+    graph_myframe.pack()
+    graph_myframe.place(x=20, y=150)
+    graph_canvas = Canvas(graph_myframe, bg='white', width=557, height=490)
+    graph_canvas.pack()
+
+    font_ = font.Font(window, size=15, weight='normal', family='Consolas')
+    b_close = Button(graph_canvas, text='X', bg='red', command=closeGraph, width=3, font=font_)
+    graph_canvas.create_window(515, 2, anchor='nw', window=b_close)
+
+    objects.append(graph_myframe)
+    objects.append(graph_canvas)
+def closeGraph():   # 그래프 닫기
+    global graph_myframe, graph_canvas
+    graph_myframe.destroy()
+    graph_canvas.destroy()
 def Init_threeButtons2():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 8, 2
