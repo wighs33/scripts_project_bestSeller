@@ -5,6 +5,7 @@ from functools import partial
 import func
 from openAPI import *
 import gmail
+import telegram
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -177,7 +178,7 @@ def Init_basic_bookList():
     objects.append(myframe)
 def Init_Scene_Home():
     Init_topLabel()     # 상단의 프로그램명 생성
-    #Init_basic_bookList()   # 대표분야 7가지에 대한 추천 책 4권씩 생성
+    Init_basic_bookList()   # 대표분야 7가지에 대한 추천 책 4권씩 생성
     Init_menuButton()   # 하단의 메뉴(홈,검색,즐겨찾기,도서관)버튼 생성
 ################################################################
 # search
@@ -497,5 +498,7 @@ scene = 'home'  # 시작 scene = home
 favorite_bookList = []  # 즐겨찾기 책 리스트
 
 Init_Scene_Home()
+
+telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화
 
 window.mainloop()
