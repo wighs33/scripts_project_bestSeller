@@ -502,3 +502,4 @@ Init_Scene_Home()
 telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화
 
 window.mainloop()
+

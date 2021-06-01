@@ -6,11 +6,9 @@ from pprint import pprint
 from datetime import date
 import sys
 import traceback
-import urllib.request
-from xml.dom.minidom import parseString
 import http.client
-import book
 import func
+import openAPI
 
 client_id = "F5hus3tIzimtuicU0AVm"
 client_secret = "MeU8Z5bALM"
@@ -22,40 +20,6 @@ headers = {"X-Naver-Client-Id": client_id, "X-Naver-Client-Secret": client_secre
 TOKEN = '1796280016:AAFg0GMajb6Lcr2Fx0tvbEFqlb7XydcW8PM'
 bot = telepot.Bot(TOKEN)
 
-def getBook(encText, NumOfBooks=10):    # 해당 분야의 책 10권 반환
-    encText = urllib.parse.quote(encText)
-    params = "?display=" + str(NumOfBooks) + "&start=1" + "&sort=count" + "&d_cont=1" + "&d_catg=" + encText
-
-    conn.request("GET", "/v1/search/book_adv.xml" + params, None, headers)
-    res = conn.getresponse()
-
-    if int(res.status) == 200:
-        BooksDoc = res.read().decode('utf-8')
-        if BooksDoc == None:
-            print("에러")
-        else:
-            parseData = parseString(BooksDoc)
-            rssList = parseData.childNodes
-            channelList = rssList[0].childNodes
-            item = channelList[0]
-            subitems = item.childNodes
-
-            total = int(subitems[4].firstChild.nodeValue)  # 4번 - total(검색 결과)
-            if total < NumOfBooks:  # 검색결과(total)가 출력을 원하는 개수(NumOfBooks)보다 작으면 검색결과만큼만 책 반환
-                NumOfBooks = total
-
-            bookDataList = []
-            for i in range(7, 7 + NumOfBooks):
-                bookDataList.append(subitems[i].childNodes)
-            bookList = []
-            for i in range(NumOfBooks):
-                book_ = book.Book()
-                book_.setData(bookDataList[i])
-                bookList.append(book_)
-            conn.close()
-            return bookList
-    conn.close()
-
 def sendMessage(user, msg):
     try:
         bot.sendMessage(user, msg)
@@ -64,7 +28,7 @@ def sendMessage(user, msg):
 
 def replyBookData(user, catg_param):
     print(user, catg_param)
-    bookList = getBook(catg_param)
+    bookList = openAPI.getBook('d_catg', catg_param, 10)    # 분야별 검색 / 분야코드 / 검색할 책 수(10개 고정)
 
     if len(bookList) == 0:
         sendMessage(user, '해당하는 데이터가 없습니다.')
