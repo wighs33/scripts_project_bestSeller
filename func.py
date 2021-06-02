@@ -3,6 +3,7 @@ import urllib
 import urllib.request
 from PIL import Image, ImageTk
 import webbrowser
+import random
 
 def getImage(url):      # url로 해당 이미지 생성
     if url == '':   # image가 없는 책의 경우
@@ -95,3 +96,11 @@ def changeDate(date):   # 출간일 형식 YYYY/MM/DD 로 변경
     return c_date
 def callback(url):  # 하이퍼링크
     webbrowser.open_new(url)
+def random_color():     # 랜덤한 색상값 반환
+    color = '#'
+    colors = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+    for i in range(6):
+        color += colors[random.randint(0, 15)]
+    return color
+def pubYear(pubdate):  # 출간 연도 반환
+    return pubdate[:4]

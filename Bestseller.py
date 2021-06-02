@@ -5,6 +5,7 @@ from functools import partial
 import func
 from openAPI import *
 import gmail
+import telegram
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -60,9 +61,9 @@ def openBook(book, favorite):     # 책 상세정보창 열기  / 즐겨찾기�
     b_back = Button(new_canvas, text='◀', font=font_, command=closeBook, width=3, height=0)
     new_canvas.create_window(185, 625, anchor='nw', window=b_back)
     # 즐겨찾기 버튼
-    if favorite:    # 즐겨찾기된 책
+    if book.favorites:    # 즐겨찾기된 책
         b_favorite = Button(new_canvas, text='-', font=font_, command=partial(removeFavorites, book), width=3, height=0)
-    else:       # 즐겨찾기되지 않은 책
+    else:                 # 즐겨찾기되지 않은 책
         b_favorite = Button(new_canvas, text='+', font=font_, command=partial(addFavorites, book), width=3, height=0)
     new_canvas.create_window(295, 625, anchor='nw', window=b_favorite)
 def closeBook():    # 책 상세정보창 닫기
@@ -73,9 +74,11 @@ def closeBook():    # 책 상세정보창 닫기
     new_canvas.destroy()
 def addFavorites(book):     # 책 즐겨찾기에 추가
     global favorite_bookList
+    book.favorites = True
     favorite_bookList.append(book)
 def removeFavorites(book):     # 책 즐겨찾기에서 삭제
     global favorite_bookList
+    book.favorites = False
     favorite_bookList.remove(book)
 # 하단 메뉴버튼 4개(홈, 검색, 즐겨찾기, 도서관)
 def menuHome():         # 메뉴 중 홈버튼 클릭 시 호출
@@ -333,6 +336,8 @@ def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 �
     b_close = Button(mail_canvas, text='X', bg='red', command=closeMail, font=font_)
     mail_canvas.create_window(523, 0, anchor='nw', window=b_close)
 
+    objects.append(mail_myframe)
+    objects.append(mail_canvas)
 def send_Mail():    # 전송버튼 클릭 시 이메일 보내기, 창 닫기
     global mail_myframe, mail_canvas, e_rAddr
     gmail.sendMail(favorite_bookList, e_rAddr.get())
@@ -342,23 +347,63 @@ def closeMail():    # 메일 주소 입력창 닫기
     global mail_myframe, mail_canvas
     mail_myframe.destroy()
     mail_canvas.destroy()
-def sendTelegram():     # 텔레그램 보내기
-    pass
 def showGraph():    # 그래프 보여주기
-    pass
+    global graph_myframe, graph_canvas
+    graph_myframe = Frame(window)
+    graph_myframe.pack()
+    graph_myframe.place(x=20, y=150)
+    graph_canvas = Canvas(graph_myframe, bg='white', width=557, height=490)
+    graph_canvas.pack()
+
+    font_ = font.Font(window, size=16, weight='bold', family='Consolas')
+    l_graph = Label(graph_canvas, bg='white', text='출간 연도별 차트', font=font_)
+    l_graph.place(x=95, y=35)
+
+    data = {}
+    for b in favorite_bookList:
+        year = func.pubYear(b.pubdate)
+        if year not in data.keys():
+            data[year] = 1
+        else:
+            data[year] += 1
+
+    start = 0
+    s = sum(data.values())
+    x, y = 20, 100
+    l = 330
+    y_dist = 20
+    i = 0
+    font_ = font.Font(window, size=14, weight='normal', family='Consolas')
+    for key, value in data.items():
+        extent = value / s * 360
+        color = func.random_color()
+        graph_canvas.create_arc((x, y, x+l, y+l), fill=color, outline='white', start=start, extent=extent)
+        start = start + extent
+        graph_canvas.create_rectangle(x+l+25, y+20*i+y_dist*i, x+l+25+20, y+20*(i+1)+y_dist*i, fill=color)
+        label = Label(graph_canvas, text=key+'년도 - '+str(value)+'권', bg='white', font=font_)
+        label.place(x=x+l+55, y=y+20*i+y_dist*i-4)
+        i += 1
+
+    font_ = font.Font(window, size=15, weight='normal', family='Consolas')
+    b_close = Button(graph_canvas, text='X', bg='red', command=closeGraph, width=3, font=font_)
+    graph_canvas.create_window(515, 2, anchor='nw', window=b_close)
+
+    objects.append(graph_myframe)
+    objects.append(graph_canvas)
+def closeGraph():   # 그래프 닫기
+    global graph_myframe, graph_canvas
+    graph_myframe.destroy()
+    graph_canvas.destroy()
 def Init_threeButtons2():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 8, 2
-    b_x, b_y = 55, 30
+    b_x, b_y = 145, 30   # 30
     b_email = Button(window, text="이메일", command=Init_mailaddressEntry, font=font_, width=b_width, height=b_height)
-    b_telegram = Button(window, text="텔레그램", command=sendTelegram, font=font_, width=b_width, height=b_height)
     b_graph = Button(window, text="그래프", command=showGraph, font=font_, width=b_width, height=b_height)
     b_email.place(x=b_x, y=b_y)
-    b_telegram.place(x=b_x+180, y=b_y)
-    b_graph.place(x=b_x+360, y=b_y)
+    b_graph.place(x=b_x+180, y=b_y)
 
     objects.append(b_email)
-    objects.append(b_telegram)
     objects.append(b_graph)
 def Init_favorite_bookList():
     myframe = Frame(window)
@@ -449,4 +494,7 @@ favorite_bookList = []  # 즐겨찾기 책 리스트
 
 Init_Scene_Home()
 
+telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화
+
 window.mainloop()
+
