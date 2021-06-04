@@ -6,7 +6,7 @@ import func
 from openAPI import *
 import gmail
 import telegram
-#import spam
+#import spam1
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -34,14 +34,14 @@ def openBook(book, favorite):     # 책 상세정보창 열기  / 즐겨찾기�
     img = func.getImage_Big(book.image)
 
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
-    l_bookImage = Label(new_canvas, image=img, width=150, height=203)
+    l_bookImage = Label(new_canvas, image=img, bd=4, relief='ridge', width=150, height=197)
     l_bookImage.image = img  # 해줘야 이미지 뜸
     new_canvas.create_window(35, 30, anchor='nw', window=l_bookImage)
 
     # 책 상세정보 info1
     info1 = '제목: '+func.changeText(book.title)+'\n\n저자: '+func.changeText(book.author)+'\n\n출간일: '\
             +func.changeDate(book.pubdate)+'\n\n가격: '+book.price+'원'
-    # c++연동 - spam.changeDate()로 변경
+    # c++연동 - spam1.changeDate()로 변경
 
     l_bookInfo1 = Label(new_canvas, text=info1, bg='white', bd=1, relief='ridge', font=font_, width=32, height=10, justify=LEFT, anchor='w')
     new_canvas.create_window(215, 30, anchor='nw', window=l_bookInfo1)
@@ -60,15 +60,20 @@ def openBook(book, favorite):     # 책 상세정보창 열기  / 즐겨찾기�
     new_canvas.create_window(35, 510, anchor='nw', window=l_bookInfo3)
 
     # 뒤로가기 버튼
-    font_ = font.Font(window, size=30, weight='bold', family='Consolas')
-    b_back = Button(new_canvas, text='◀', bg='white', fg=basic_color1, activebackground='white', activeforeground=basic_color1, font=font_, command=closeBook, width=3, height=0)
-    new_canvas.create_window(185, 625, anchor='nw', window=b_back)
+    back_img = func.loadImage('back_color.png')
+    b_back = Button(new_canvas, image=back_img, bg='white', bd=1, activebackground='white', command=closeBook, width=80, height=80)
+    b_back.image = back_img
+    new_canvas.create_window(180, 625, anchor='nw', window=b_back)
     # 즐겨찾기 버튼
     if book.favorites:    # 즐겨찾기된 책
-        b_favorite = Button(new_canvas, text='☆', bg='white', fg=basic_color1, activebackground='white', activeforeground=basic_color1, font=font_, command=partial(removeFavorites, book), width=3, height=0)
+        favorites_img = func.loadImage('favorites_remove_color.png')
+        b_favorite = Button(new_canvas, image=favorites_img, bd=1, bg='white', activebackground='white', command=partial(removeFavorites, book), width=80, height=80)
+        b_favorite.image = favorites_img
     else:                 # 즐겨찾기되지 않은 책
-        b_favorite = Button(new_canvas, text='★', bg='white', fg='yellow', activebackground='white', activeforeground='yellow', font=font_, command=partial(addFavorites, book), width=3, height=0)
-    new_canvas.create_window(295, 625, anchor='nw', window=b_favorite)
+        favorites_img = func.loadImage('favorites_add_color.png')
+        b_favorite = Button(new_canvas, image=favorites_img, bd=1, bg='white', activebackground='white', command=partial(addFavorites, book), width=80, height=80)
+        b_favorite.image = favorites_img
+    new_canvas.create_window(290, 625, anchor='nw', window=b_favorite)
 def closeBook():    # 책 상세정보창 닫기
     global new_myframe, new_canvas, b_menu, scene, topLabel
     for b in b_menu:
@@ -87,63 +92,92 @@ def removeFavorites(book):     # 책 즐겨찾기에서 삭제
     favorite_bookList.remove(book)
 # 하단 메뉴버튼 4개(홈, 검색, 즐겨찾기, 도서관)
 def menuHome():         # 메뉴 중 홈버튼 클릭 시 호출
-    global scene, b_menu
+    global scene, b_menu, menuImageList
     if scene != 'home':     # home이 아닌 scene에서 home 버튼을 누르면 객체들 삭제 후 home 생성
         for obj in objects:
             obj.destroy()
         Init_Scene_Home()
         scene = 'home'
         for i in range(4):
-            b_menu[i]['bg'] = default_color_bg
-            b_menu[i]['fg'] = default_color_fg
-        b_menu[0]['bg'] = selected_color_bg
-        b_menu[0]['fg'] = selected_color_fg
+            if i == 0:
+                b_menu[i]['bg'] = selected_color_bg
+                b_menu[i].configure(image=menuImageList[i][1])
+                b_menu[i].image = menuImageList[i][1]
+            else:
+                b_menu[i]['bg'] = default_color_bg
+                b_menu[i].configure(image=menuImageList[i][0])
+                b_menu[i].image = menuImageList[i][0]
+
 def menuSearch():       # 메뉴 중 검색버튼 클릭 시 호출
-    global scene, b_menu
+    global scene, b_menu, menuImageList
     if scene != 'search':     # search가 아닌 scene에서 search 버튼을 누르면 객체들 삭제 후 search 생성
         for obj in objects:
             obj.destroy()
         Init_Scene_Search()
         scene = 'search'
         for i in range(4):
-            b_menu[i]['bg'] = default_color_bg
-            b_menu[i]['fg'] = default_color_fg
-        b_menu[1]['bg'] = selected_color_bg
-        b_menu[1]['fg'] = selected_color_fg
+            if i == 1:
+                b_menu[i]['bg'] = selected_color_bg
+                b_menu[i].configure(image=menuImageList[i][1])
+                b_menu[i].image = menuImageList[i][1]
+            else:
+                b_menu[i]['bg'] = default_color_bg
+                b_menu[i].configure(image=menuImageList[i][0])
+                b_menu[i].image = menuImageList[i][0]
 def menuFavorites():    # 메뉴 중 즐겨찾기버튼 클릭 시 호출
-    global scene, b_menu
+    global scene, b_menu, menuImageList
     if scene != 'favorites':     # favorites가 아닌 scene에서 favorites 버튼을 누르면 객체들 삭제 후 favorites 생성
         for obj in objects:
             obj.destroy()
         Init_Scene_Favorites()
         scene = 'favorites'
         for i in range(4):
-            b_menu[i]['bg'] = default_color_bg
-            b_menu[i]['fg'] = default_color_fg
-        b_menu[2]['bg'] = selected_color_bg
-        b_menu[2]['fg'] = selected_color_fg
+            if i == 2:
+                b_menu[i]['bg'] = selected_color_bg
+                b_menu[i].configure(image=menuImageList[i][1])
+                b_menu[i].image = menuImageList[i][1]
+            else:
+                b_menu[i]['bg'] = default_color_bg
+                b_menu[i].configure(image=menuImageList[i][0])
+                b_menu[i].image = menuImageList[i][0]
 def menuLibrary():      # 메뉴 중 도서관버튼 클릭 시 호출
-    global scene, b_menu
+    global scene, b_menu, menuImageList
     if scene != 'library':     # library가 아닌 scene에서 library 버튼을 누르면 객체들 삭제 후 library 생성
         for obj in objects:
             obj.destroy()
         Init_Scene_Library()
         scene = 'library'
         for i in range(4):
-            b_menu[i]['bg'] = default_color_bg
-            b_menu[i]['fg'] = default_color_fg
-        b_menu[3]['bg'] = selected_color_bg
-        b_menu[3]['fg'] = selected_color_fg
+            if i == 3:
+                b_menu[i]['bg'] = selected_color_bg
+                b_menu[i].configure(image=menuImageList[i][1])
+                b_menu[i].image = menuImageList[i][1]
+            else:
+                b_menu[i]['bg'] = default_color_bg
+                b_menu[i].configure(image=menuImageList[i][0])
+                b_menu[i].image = menuImageList[i][0]
 def Init_menuButton():      # 하단의 메뉴(홈,검색,즐겨찾기,도서관) 버튼 생성
-    global b_menu
+    global b_menu, menuImageList
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
-    b_width, b_height = 10, 2
+    b_width, b_height = 150, 82
     b_x, b_y = 0, 662
     b_menu = []
-    b_menu.append(Button(window, text="홈", bg=selected_color_bg, fg=selected_color_fg, activebackground=selected_color_bg, activeforeground=selected_color_fg, command=menuHome, font=font_, width=b_width, height=b_height))
-    b_menu.append(Button(window, text="검색", bg=default_color_bg, fg=default_color_fg, activebackground=selected_color_bg, activeforeground=selected_color_fg, command=menuSearch, font=font_, width=b_width, height=b_height))
-    b_menu.append(Button(window, text="즐겨찾기", bg=default_color_bg, fg=default_color_fg, activebackground=selected_color_bg, activeforeground=selected_color_fg, command=menuFavorites, font=font_, width=b_width, height=b_height))
-    b_menu.append(Button(window, text="도서관", bg=default_color_bg, fg=default_color_fg, activebackground=selected_color_bg, activeforeground=selected_color_fg, command=menuLibrary, font=font_, width=b_width, height=b_height))
+
+    image_ = [['home_color', 'home_white'], ['search_color', 'search_white'], ['favorites_color', 'favorites_white'], ['library_color', 'library_white']]
+    menuImageList = [[] for i in range(4)]
+    for i in range(4):
+        for j in range(2):
+            menuImageList[i].append(func.loadImage(image_[i][j]+'.png'))
+
+    b_menu.append(Button(window, image=menuImageList[0][1], bg=selected_color_bg, command=menuHome, width=b_width, height=b_height))
+    b_menu[0].image = menuImageList[0][1]
+    b_menu.append(Button(window, image=menuImageList[1][0], bg=default_color_bg, command=menuSearch, width=b_width, height=b_height))
+    b_menu[1].image = menuImageList[1][0]
+    b_menu.append(Button(window, image=menuImageList[2][0], bg=default_color_bg, command=menuFavorites, width=b_width, height=b_height))
+    b_menu[2].image = menuImageList[2][0]
+    b_menu.append(Button(window, image=menuImageList[3][0], bg=default_color_bg, command=menuLibrary, width=b_width, height=b_height))
+    b_menu[3].image = menuImageList[3][0]
+
     b_menu[0].place(x=b_x, y=b_y)
     b_menu[1].place(x=b_x+150, y=b_y)
     b_menu[2].place(x=b_x+300, y=b_y)
@@ -196,7 +230,7 @@ def Init_basic_bookList():
     objects.append(myframe)
 def Init_Scene_Home():
     Init_topLabel()     # 상단의 프로그램명 생성
-    Init_basic_bookList()   # 대표분야 7가지에 대한 추천 책 4권씩 생성
+    #Init_basic_bookList()   # 대표분야 7가지에 대한 추천 책 4권씩 생성
     Init_menuButton()   # 하단의 메뉴(홈,검색,즐겨찾기,도서관)버튼 생성
 ################################################################
 # search
@@ -236,7 +270,7 @@ def Init_Combobox():    # 분야 검색에 쓰이는 콥보박스 생성
         lst.append(k)
     combobox = tkinter.ttk.Combobox(window, width=30, font=font_, values=lst)  # value=분야 리스트
     combobox.pack()
-    combobox.place(x=80, y=150)
+    combobox.place(x=90, y=150)
     combobox.set('분야 선택')  # combobox 텍스트 디폴트 값
     window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
 
@@ -248,7 +282,7 @@ def Init_searchEntry():     # 저자, 제목 검색에 쓰이는 엔트리
     key.set('저자명 입력') if search_state == 'author' else key.set('제목 입력')     # entry 텍스트 디폴트 값
     e_search = Entry(window, textvariable=key, justify=LEFT, font=font_)
     e_search.pack()
-    e_search.place(x=80, y=150, width=350, height=30)
+    e_search.place(x=90, y=150, width=350, height=30)
 
     objects.append(e_search)
 def searchBook():   # 키워드값을 가지고 책 리스트를 만듬
@@ -282,16 +316,16 @@ def showBookList(bookList): # 최대 16권의 겸색 결과를 화면에 띄움
         button.image = img  # 해줘야 이미지 뜸
         book_Canvas.create_window(30+130*(i%4), 15+y_distance*(i//4), anchor='nw', window=button)
         # 검색된 책 제목 라벨
-        label = Label(book_Canvas, text=func.changeTitle(book.title), font=font_, width=12, height=3)
+        label = Label(book_Canvas, text=func.changeTitle(book.title), bg='white', bd=1, relief='ridge', font=font_, width=12, height=3)
         book_Canvas.create_window(30-9+130*(i%4), 160+y_distance*(i//4), anchor='nw', window=label)
         i += 1
 def Init_threeButtons1():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 8, 2
     b_x, b_y = 55, 30
-    b_category = Button(window, text="분야", command=searchCategory, font=font_, width=b_width, height=b_height)
-    b_author = Button(window, text="저자", command=searchAuthor, font=font_, width=b_width, height=b_height)
-    b_title = Button(window, text="제목", command=searchTitle, font=font_, width=b_width, height=b_height)
+    b_category = Button(window, text="분야", bg='white', fg=basic_color1, activebackground='white', activeforeground=basic_color1, command=searchCategory, font=font_, width=b_width, height=b_height)
+    b_author = Button(window, text="저자", bg='white', fg=basic_color1, activebackground='white', activeforeground=basic_color1, command=searchAuthor, font=font_, width=b_width, height=b_height)
+    b_title = Button(window, text="제목", bg='white', fg=basic_color1, activebackground='white', activeforeground=basic_color1, command=searchTitle, font=font_, width=b_width, height=b_height)
     b_category.place(x=b_x, y=b_y)
     b_author.place(x=b_x+180, y=b_y)
     b_title.place(x=b_x+360, y=b_y)
@@ -301,10 +335,11 @@ def Init_threeButtons1():
     objects.append(b_title)
 def Init_searchKeyword():
     Init_Combobox()
-    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    b_search = Button(window, text="검색", command=searchBook, font=font_, width=5)
+    search_img = func.loadImage_small('search_color.png')
+    b_search = Button(window, image=search_img, bg='white', activebackground='white', command=searchBook, width=45, height=45)
+    b_search.image = search_img
     b_search.pack()
-    b_search.place(x=450, y=144)
+    b_search.place(x=460, y=139)
 
     objects.append(b_search)
 def Init_booklistFrame():
@@ -510,8 +545,7 @@ basic_color3 = '#2FC4B2'
 
 selected_color_bg = basic_color1   # 선택된 menu 버튼 색상
 default_color_bg = 'white'    # 선택되지 않은 menu 버튼 색상
-selected_color_fg = 'white'
-default_color_fg = basic_color1
+selected_color_fg = basic_color1
 
 window = Tk()
 window.title('Bestseller')
