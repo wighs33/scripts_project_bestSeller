@@ -16,7 +16,7 @@ categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자�
 ################################################################
 # common
 ################################################################'
-def openBook(book, favorite):     # 책 상세정보창 열기  / 즐겨찾기된 책을 열면 favorite = True 아니면 False
+def openBook(book):     # 책 상세정보창 열기
     global new_myframe, new_canvas, b_menu, scene, topLabel
     for b in b_menu:
         b['state'] = 'disabled'
@@ -84,12 +84,14 @@ def closeBook():    # 책 상세정보창 닫기
     new_canvas.destroy()
 def addFavorites(book):     # 책 즐겨찾기에 추가
     global favorite_bookList
-    book.favorites = True
-    favorite_bookList.append(book)
+    if book.favorites is False:
+        book.favorites = True
+        favorite_bookList.append(book)
 def removeFavorites(book):     # 책 즐겨찾기에서 삭제
     global favorite_bookList
-    book.favorites = False
-    favorite_bookList.remove(book)
+    if book.favorites is True:
+        book.favorites = False
+        favorite_bookList.remove(book)
 # 하단 메뉴버튼 4개(홈, 검색, 즐겨찾기, 도서관)
 def menuHome():         # 메뉴 중 홈버튼 클릭 시 호출
     global scene, b_menu, menuImageList
@@ -191,9 +193,10 @@ def set_basic_bookList():   # home에서 기본적으로 추천해줄 대표분�
         basic_bookList.append(getBook('d_catg', str(list(categoryDict.values())[i]), 4))
 def Init_topLabel():
     global topLabel
-    font_ = font.Font(window, size=30, weight='bold', family='Consolas')
-    topLabel = Label(window, text=' B E S T S E L L E R ', bd=1, relief='ridge', bg=basic_color1, fg='white', font=font_)
-    topLabel.place(x=65, y=22)
+    title_img = func.loadImage('title_0.png', 360, 45)
+    topLabel = Label(window, image=title_img, bd=1, relief='ridge', bg=basic_color1, width=450, height=60)
+    topLabel.image = title_img
+    topLabel.place(x=72, y=19)
 
     objects.append(topLabel)
 def Init_basic_bookList():
@@ -219,7 +222,7 @@ def Init_basic_bookList():
         for j in range(4):  # 분야별 4권 책 이미지(버튼), 제목(라벨)
             # 분야별 책 이미지 버튼
             img = func.getImage(basic_bookList[i][j].image)
-            button = Button(canvas, image=img, command=partial(openBook, basic_bookList[i][j], False), width=90, height=130)
+            button = Button(canvas, image=img, command=partial(openBook, basic_bookList[i][j]), width=90, height=130)
             button.image = img  # 해줘야 이미지 뜸
             canvas.create_window(30+130*j, 65+y_distance*i, anchor='nw', window=button)
             # 분야별 책 제목
@@ -322,7 +325,6 @@ def Init_Combobox():    # 분야 검색에 쓰이는 콥보박스 생성
     for k in categoryDict.keys():
         lst.append(k)
     combobox = tkinter.ttk.Combobox(window, width=30, font=font_, values=lst)  # value=분야 리스트
-    combobox.pack()
     combobox.place(x=90, y=150)
     combobox.set('분야 선택')  # combobox 텍스트 디폴트 값
     window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
@@ -334,7 +336,6 @@ def Init_searchEntry():     # 저자, 제목 검색에 쓰이는 엔트리
     key = StringVar()
     key.set('저자명 입력') if search_state == 'author' else key.set('제목 입력')     # entry 텍스트 디폴트 값
     e_search = Entry(window, textvariable=key, justify=LEFT, font=font_)
-    e_search.pack()
     e_search.place(x=90, y=150, width=350, height=30)
 
     objects.append(e_search)
@@ -348,15 +349,15 @@ def searchBook():   # 키워드값을 가지고 책 리스트를 만듬
         keyword = combobox.get()
     else:
         keyword = e_search.get()
-    # 최대 16권의 검색 결과를 갖는 북 리스트 생성
+    # 최대 20권의 검색 결과를 갖는 북 리스트 생성
     if search_state == 'category':
-        bookList = getBook("d_catg", str(categoryDict[keyword]), 16)
+        bookList = getBook("d_catg", str(categoryDict[keyword]), 20)
     elif search_state == 'author':
-        bookList = getBook("d_auth", keyword, 16)
+        bookList = getBook("d_auth", keyword, 20)
     elif search_state == 'title':
-        bookList = getBook("d_titl", keyword, 16)
+        bookList = getBook("d_titl", keyword, 20)
     showBookList(bookList)
-def showBookList(bookList): # 최대 16권의 겸색 결과를 화면에 띄움
+def showBookList(bookList): # 최대 20권의 겸색 결과를 화면에 띄움
     global book_Canvas
     y_distance = 220
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
@@ -365,7 +366,7 @@ def showBookList(bookList): # 최대 16권의 겸색 결과를 화면에 띄움
     for book in bookList:
         # 검색된 책 이미지 버튼
         img = func.getImage(book.image)
-        button = Button(book_Canvas, image=img, command=partial(openBook, book, False), width=90, height=130)
+        button = Button(book_Canvas, image=img, command=partial(openBook, book), width=90, height=130)
         button.image = img  # 해줘야 이미지 뜸
         book_Canvas.create_window(30+130*(i%4), 15+y_distance*(i//4), anchor='nw', window=button)
         # 검색된 책 제목 라벨
@@ -401,18 +402,16 @@ def Init_searchKeyword():
     search_img = func.loadImage('search_color.png', 35)
     b_search = Button(window, image=search_img, bg='white', activebackground='white', command=searchBook, width=45, height=45)
     b_search.image = search_img
-    b_search.pack()
     b_search.place(x=460, y=139)
 
     objects.append(b_search)
 def Init_booklistFrame():
     global book_Canvas
     myframe = Frame(window)
-    myframe.pack()
     myframe.place(x=20, y=200)
     scrollbar = Scrollbar(myframe)
     scrollbar.pack(side=RIGHT, fill=Y)
-    book_Canvas = Canvas(myframe, bg='white', width=540, height=440, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 900))
+    book_Canvas = Canvas(myframe, bg='white', width=540, height=440, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 1125))
     book_Canvas.pack()
     scrollbar.config(command=book_Canvas.yview)
 
@@ -430,7 +429,6 @@ def Init_Scene_Search():
 def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 생성
     global mail_myframe, mail_canvas, e_rAddr
     mail_myframe = Frame(window)
-    mail_myframe.pack()
     mail_myframe.place(x=20, y=20)
     mail_canvas = Canvas(mail_myframe, bg='white', width=557, height=115)
     mail_canvas.pack()
@@ -468,7 +466,6 @@ def closeMail():    # 메일 주소 입력창 닫기
 def showGraph():    # 그래프 보여주기
     global graph_myframe, graph_canvas
     graph_myframe = Frame(window)
-    graph_myframe.pack()
     graph_myframe.place(x=20, y=150)
     graph_canvas = Canvas(graph_myframe, bg='white', width=557, height=490)
     graph_canvas.pack()
@@ -533,7 +530,6 @@ def Init_threeButtons2():
     objects.append(b_graph)
 def Init_favorite_bookList():
     myframe = Frame(window)
-    myframe.pack()
     myframe.place(x=20, y=150)
     scrollbar = Scrollbar(myframe)
     scrollbar.pack(side=RIGHT, fill=Y)
@@ -545,7 +541,7 @@ def Init_favorite_bookList():
     for i in range(len(favorite_bookList)):     # 즐겨찾기된 책 이미지(버튼), info(라벨)
         # 책 이미지 버튼
         img = func.getImage(favorite_bookList[i].image)
-        button = Button(canvas, image=img, command=partial(openBook, favorite_bookList[i], True), width=90, height=130)
+        button = Button(canvas, image=img, command=partial(openBook, favorite_bookList[i]), width=90, height=130)
         button.image = img  # 해줘야 이미지 뜸
         canvas.create_window(15, 20+y_distance*i, anchor='nw', window=button)
 
@@ -578,12 +574,10 @@ def addressSearch():     # 주소엔트리, 검색버튼
     key = StringVar()
     key.set('주소 입력')
     addressEntry = Entry(window, textvariable=key, justify=LEFT, font=font_)
-    addressEntry.pack()
     addressEntry.place(x=80, y=80, width=350, height=30)
 
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
     searchButton = Button(window, text="검색", command=showAddressList, font=font_, width=5)
-    searchButton.pack()
     searchButton.place(x=450, y=74)
 
     objects.append(addressEntry)
@@ -592,7 +586,6 @@ def addressSearch():     # 주소엔트리, 검색버튼
 def showAddressList():
     global addressCanvas
     myframe = Frame(window)
-    myframe.pack()
     myframe.place(x=20, y=200)
     scrollbar = Scrollbar(myframe)
     scrollbar.pack(side=RIGHT, fill=Y)
@@ -606,7 +599,6 @@ def showAddressList():
 def mapButton():
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
     searchButton = Button(window, text="검색", command=searchBook, font=font_, width=5)
-    searchButton.pack()
     searchButton.place(x=450, y=74)
 
     objects.append(searchButton)
@@ -615,11 +607,6 @@ def Init_Scene_Library():
     showAddressList()
 
 basic_color1 = '#2fecb3'
-#basic_color2 = '#2fd8b3'
-#basic_color3 = '#2FC4B2'
-# #2fecb3    1번째
-# #2fd8b3    2번째
-# #2FC4B2    3번째
 
 selected_color_bg = basic_color1   # 선택된 menu 버튼 색상
 default_color_bg = 'white'    # 선택되지 않은 menu 버튼 색상
@@ -637,9 +624,6 @@ favorite_bookList = []  # 즐겨찾기 책 리스트
 basic_bookList = []  # home에서 추천해줄 대표분야 7가지 책
 set_basic_bookList()
 
-favorite_bookList.append(basic_bookList[0][0])
-favorite_bookList.append(basic_bookList[0][1])
-favorite_bookList.append(basic_bookList[0][2])
 Init_Scene_Home()
 
 #telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화 / 베스트셀러 봇 2021 텔레그램에 검색

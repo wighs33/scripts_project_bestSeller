@@ -8,7 +8,8 @@ from tkinter import PhotoImage
 
 def getImage(url):      # url로 해당 이미지 생성
     if url == '':   # image가 없는 책의 경우
-        url = 'https://img.icons8.com/ios/452/no-image.png' # 이미지 없음 image
+        img = loadImage('no_image.png', 90, 130) # 이미지 없음 image
+        return img
     with urllib.request.urlopen(url) as u:
         raw_data = u.read()
     img = Image.open(BytesIO(raw_data))
@@ -17,16 +18,19 @@ def getImage(url):      # url로 해당 이미지 생성
     return img
 def getImage_Big(url):      # url로 해당 이미지 생성
     if url == '':   # image가 없는 책의 경우
-        url = 'https://img.icons8.com/ios/452/no-image.png' # 이미지 없음 image
+        img = loadImage('no_image.png', 150, 197)  # 이미지 없음 image
+        return img
     with urllib.request.urlopen(url) as u:
         raw_data = u.read()
     img = Image.open(BytesIO(raw_data))
     img = img.resize((150, 197))   # image 크기 조정
     img = ImageTk.PhotoImage(img)
     return img
-def loadImage(filename, size):    # menu에 쓰이는 이미지들 불러오기 및 크기 조정
+def loadImage(filename, w, h=0):    # menu에 쓰이는 이미지들 불러오기 및 크기 조정
     img = Image.open('res/'+filename)
-    img = img.resize((size, size))
+    if h == 0:
+        h = w
+    img = img.resize((w, h))
     img = ImageTk.PhotoImage(img)
     return img
 def changeTitle(title):     # 책 제목 라벨 크기에 맞게 변경
