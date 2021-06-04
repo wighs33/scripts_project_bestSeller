@@ -23,10 +23,10 @@ def openBook(book, favorite):     # 책 상세정보창 열기  / 즐겨찾기�
     if scene == 'home':
         topLabel.destroy()
     new_myframe = Frame(window)
-    new_myframe.place(x=20, y=30)
+    new_myframe.place(x=20, y=20)
     scrollbar = Scrollbar(new_myframe)
     scrollbar.pack(side=RIGHT, fill=Y)
-    new_canvas = Canvas(new_myframe, bg='white', width=540, height=610, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 720))
+    new_canvas = Canvas(new_myframe, bg='white', width=540, height=620, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 720))
     new_canvas.pack()
     scrollbar.config(command=new_canvas.yview)
 
@@ -236,30 +236,83 @@ def Init_Scene_Home():
 # search
 ################################################################
 def searchCategory():   # 분야별 검색
-    global search_state, combobox, e_search
+    global search_state, combobox, e_search, b_category, b_author, b_title
     if search_state != 'category':  # 저자, 제목 검색에서 분야 검색으로 전환하는 경우 - entry 삭제 후 combobox 생성
         e_search.destroy()
         objects.remove(e_search)
         Init_Combobox()
+        b_category['bg'] = basic_color1
+        b_category['activebackground'] = basic_color1
+        category_img = func.loadImage('category_white.png', 90)
+        b_category['image'] = category_img
+        b_category.image = category_img
+
+        b_author['bg'] = 'white'
+        b_author['activebackground'] = 'white'
+        author_img = func.loadImage('author_color.png', 90)
+        b_author['image'] = author_img
+        b_author.image = author_img
+
+        b_title['bg'] = 'white'
+        b_title['activebackground'] = 'white'
+        title_img = func.loadImage('title_color.png', 90)
+        b_title['image'] = title_img
+        b_title.image = title_img
     search_state = 'category'
 def searchAuthor():     # 저자별 검색
-    global search_state, combobox, e_search
+    global search_state, combobox, e_search, b_category, b_author, b_title
     if search_state == 'category':  # 분야 검색에서 저자 검색으로 전환하는 경우 - combobox 삭제 후 entry 생성
         combobox.destroy()
         objects.remove(combobox)
     else:  # 저자 검색에서 저자 or 제목 버튼 클릭 -> entry 초기화
         e_search.destroy()
         objects.remove(e_search)
+    b_category['bg'] = 'white'
+    b_category['activebackground'] = 'white'
+    category_img = func.loadImage('category_color.png', 90)
+    b_category['image'] = category_img
+    b_category.image = category_img
+
+    b_author['bg'] = basic_color1
+    b_author['activebackground'] = basic_color1
+    author_img = func.loadImage('author_white.png', 90)
+    b_author['image'] = author_img
+    b_author.image = author_img
+
+    b_title['bg'] = 'white'
+    b_title['activebackground'] = 'white'
+    title_img = func.loadImage('title_color.png', 90)
+    b_title['image'] = title_img
+    b_title.image = title_img
+
     search_state = 'author'
     Init_searchEntry()
 def searchTitle():      # 제목 검색
-    global search_state, combobox, e_search
+    global search_state, combobox, e_search, b_category, b_author, b_title
     if search_state == 'category':  # 분야 검색에서 제목 검색으로 전환하는 경우 - combobox 삭제 후 entry 생성
         combobox.destroy()
         objects.remove(combobox)
     else:  # 제목 검색에서 제목 or 저자 버튼 클릭 -> entry 초기화
         e_search.destroy()
         objects.remove(e_search)
+    b_category['bg'] = 'white'
+    b_category['activebackground'] = 'white'
+    category_img = func.loadImage('category_color.png', 90)
+    b_category['image'] = category_img
+    b_category.image = category_img
+
+    b_author['bg'] = 'white'
+    b_author['activebackground'] = 'white'
+    author_img = func.loadImage('author_color.png', 90)
+    b_author['image'] = author_img
+    b_author.image = author_img
+
+    b_title['bg'] = basic_color1
+    b_title['activebackground'] = basic_color1
+    title_img = func.loadImage('title_white.png', 90)
+    b_title['image'] = title_img
+    b_title.image = title_img
+
     search_state = 'title'
     Init_searchEntry()
 def Init_Combobox():    # 분야 검색에 쓰이는 콥보박스 생성
@@ -320,15 +373,25 @@ def showBookList(bookList): # 최대 16권의 겸색 결과를 화면에 띄움
         book_Canvas.create_window(30-9+130*(i%4), 160+y_distance*(i//4), anchor='nw', window=label)
         i += 1
 def Init_threeButtons1():
-    font_ = font.Font(window, size=20, weight='bold', family='Consolas')
-    b_width, b_height = 8, 2
-    b_x, b_y = 55, 30
-    b_category = Button(window, text="분야", bg='white', fg=basic_color1, activebackground='white', activeforeground=basic_color1, command=searchCategory, font=font_, width=b_width, height=b_height)
-    b_author = Button(window, text="저자", bg='white', fg=basic_color1, activebackground='white', activeforeground=basic_color1, command=searchAuthor, font=font_, width=b_width, height=b_height)
-    b_title = Button(window, text="제목", bg='white', fg=basic_color1, activebackground='white', activeforeground=basic_color1, command=searchTitle, font=font_, width=b_width, height=b_height)
+    global b_category, b_author, b_title
+    b_width, b_height = 100, 100
+    b_x, b_y = 88, 25
+
+    category_img = func.loadImage('category_white.png', 90)
+    b_category = Button(window, image=category_img, bg=basic_color1, activebackground=basic_color1, command=searchCategory, width=b_width, height=b_height)
+    b_category.image = category_img
+
+    author_img = func.loadImage('author_color.png', 90)
+    b_author = Button(window, image=author_img, bg='white', activebackground='white', command=searchAuthor, width=b_width, height=b_height)
+    b_author.image = author_img
+
+    title_img = func.loadImage('title_color.png', 90)
+    b_title = Button(window, image=title_img, bg='white', activebackground='white', command=searchTitle, width=b_width, height=b_height)
+    b_title.image = title_img
+
     b_category.place(x=b_x, y=b_y)
-    b_author.place(x=b_x+180, y=b_y)
-    b_title.place(x=b_x+360, y=b_y)
+    b_author.place(x=b_x+160, y=b_y)
+    b_title.place(x=b_x+320, y=b_y)
 
     objects.append(b_category)
     objects.append(b_author)
@@ -552,8 +615,8 @@ def Init_Scene_Library():
     showAddressList()
 
 basic_color1 = '#2fecb3'
-basic_color2 = '#2fd8b3'
-basic_color3 = '#2FC4B2'
+#basic_color2 = '#2fd8b3'
+#basic_color3 = '#2FC4B2'
 # #2fecb3    1번째
 # #2fd8b3    2번째
 # #2FC4B2    3번째
