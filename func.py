@@ -4,25 +4,36 @@ import urllib.request
 from PIL import Image, ImageTk
 import webbrowser
 import random
+from tkinter import PhotoImage
 
 def getImage(url):      # url로 해당 이미지 생성
     if url == '':   # image가 없는 책의 경우
         url = 'https://img.icons8.com/ios/452/no-image.png' # 이미지 없음 image
     with urllib.request.urlopen(url) as u:
         raw_data = u.read()
-    im = Image.open(BytesIO(raw_data))
-    im = im.resize((90, 130))   # image 크기 조정
-    image = ImageTk.PhotoImage(im)
-    return image
+    img = Image.open(BytesIO(raw_data))
+    img = img.resize((90, 130))   # image 크기 조정
+    img = ImageTk.PhotoImage(img)
+    return img
 def getImage_Big(url):      # url로 해당 이미지 생성
     if url == '':   # image가 없는 책의 경우
         url = 'https://img.icons8.com/ios/452/no-image.png' # 이미지 없음 image
     with urllib.request.urlopen(url) as u:
         raw_data = u.read()
-    im = Image.open(BytesIO(raw_data))
-    im = im.resize((150, 203))   # image 크기 조정
-    image = ImageTk.PhotoImage(im)
-    return image
+    img = Image.open(BytesIO(raw_data))
+    img = img.resize((150, 197))   # image 크기 조정
+    img = ImageTk.PhotoImage(img)
+    return img
+def loadImage(filename):    # menu에 쓰이는 이미지들 불러오기 및 크기 조정
+    img = Image.open('res/'+filename)
+    img = img.resize((60, 60))
+    img = ImageTk.PhotoImage(img)
+    return img
+def loadImage_small(filename):
+    img = Image.open('res/'+filename)
+    img = img.resize((35, 35))
+    img = ImageTk.PhotoImage(img)
+    return img
 def changeTitle(title):     # 책 제목 라벨 크기에 맞게 변경
     c_title = ''
     line = 1
