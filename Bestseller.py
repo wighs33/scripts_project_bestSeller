@@ -60,17 +60,17 @@ def openBook(book, favorite):     # 책 상세정보창 열기  / 즐겨찾기�
     new_canvas.create_window(35, 510, anchor='nw', window=l_bookInfo3)
 
     # 뒤로가기 버튼
-    back_img = func.loadImage('back_color.png')
+    back_img = func.loadImage('back_color.png', 60)
     b_back = Button(new_canvas, image=back_img, bg='white', bd=1, activebackground='white', command=closeBook, width=80, height=80)
     b_back.image = back_img
     new_canvas.create_window(180, 625, anchor='nw', window=b_back)
     # 즐겨찾기 버튼
     if book.favorites:    # 즐겨찾기된 책
-        favorites_img = func.loadImage('favorites_remove_color.png')
+        favorites_img = func.loadImage('favorites_remove_color.png', 60)
         b_favorite = Button(new_canvas, image=favorites_img, bd=1, bg='white', activebackground='white', command=partial(removeFavorites, book), width=80, height=80)
         b_favorite.image = favorites_img
     else:                 # 즐겨찾기되지 않은 책
-        favorites_img = func.loadImage('favorites_add_color.png')
+        favorites_img = func.loadImage('favorites_add_color.png', 60)
         b_favorite = Button(new_canvas, image=favorites_img, bd=1, bg='white', activebackground='white', command=partial(addFavorites, book), width=80, height=80)
         b_favorite.image = favorites_img
     new_canvas.create_window(290, 625, anchor='nw', window=b_favorite)
@@ -167,15 +167,15 @@ def Init_menuButton():      # 하단의 메뉴(홈,검색,즐겨찾기,도서관
     menuImageList = [[] for i in range(4)]
     for i in range(4):
         for j in range(2):
-            menuImageList[i].append(func.loadImage(image_[i][j]+'.png'))
+            menuImageList[i].append(func.loadImage(image_[i][j]+'.png', 60))
 
-    b_menu.append(Button(window, image=menuImageList[0][1], bg=selected_color_bg, command=menuHome, width=b_width, height=b_height))
+    b_menu.append(Button(window, image=menuImageList[0][1], bg=selected_color_bg, activebackground='white', command=menuHome, width=b_width, height=b_height))
     b_menu[0].image = menuImageList[0][1]
-    b_menu.append(Button(window, image=menuImageList[1][0], bg=default_color_bg, command=menuSearch, width=b_width, height=b_height))
+    b_menu.append(Button(window, image=menuImageList[1][0], bg=default_color_bg, activebackground='white', command=menuSearch, width=b_width, height=b_height))
     b_menu[1].image = menuImageList[1][0]
-    b_menu.append(Button(window, image=menuImageList[2][0], bg=default_color_bg, command=menuFavorites, width=b_width, height=b_height))
+    b_menu.append(Button(window, image=menuImageList[2][0], bg=default_color_bg, activebackground='white', command=menuFavorites, width=b_width, height=b_height))
     b_menu[2].image = menuImageList[2][0]
-    b_menu.append(Button(window, image=menuImageList[3][0], bg=default_color_bg, command=menuLibrary, width=b_width, height=b_height))
+    b_menu.append(Button(window, image=menuImageList[3][0], bg=default_color_bg, activebackground='white', command=menuLibrary, width=b_width, height=b_height))
     b_menu[3].image = menuImageList[3][0]
 
     b_menu[0].place(x=b_x, y=b_y)
@@ -230,7 +230,7 @@ def Init_basic_bookList():
     objects.append(myframe)
 def Init_Scene_Home():
     Init_topLabel()     # 상단의 프로그램명 생성
-    #Init_basic_bookList()   # 대표분야 7가지에 대한 추천 책 4권씩 생성
+    Init_basic_bookList()   # 대표분야 7가지에 대한 추천 책 4권씩 생성
     Init_menuButton()   # 하단의 메뉴(홈,검색,즐겨찾기,도서관)버튼 생성
 ################################################################
 # search
@@ -335,7 +335,7 @@ def Init_threeButtons1():
     objects.append(b_title)
 def Init_searchKeyword():
     Init_Combobox()
-    search_img = func.loadImage_small('search_color.png')
+    search_img = func.loadImage('search_color.png', 35)
     b_search = Button(window, image=search_img, bg='white', activebackground='white', command=searchBook, width=45, height=45)
     b_search.image = search_img
     b_search.pack()
@@ -369,25 +369,27 @@ def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 �
     mail_myframe = Frame(window)
     mail_myframe.pack()
     mail_myframe.place(x=20, y=20)
-    mail_canvas = Canvas(mail_myframe, bg='white', width=540, height=100)
+    mail_canvas = Canvas(mail_myframe, bg='white', width=557, height=115)
     mail_canvas.pack()
 
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
 
     label = Label(mail_canvas, text='메일 주소 입력:', bg='white', font=font_, height=1)
-    mail_canvas.create_window(15, 38, anchor='nw', window=label)
+    mail_canvas.create_window(15, 44, anchor='nw', window=label)
 
     key = StringVar()
     e_rAddr = Entry(mail_canvas, textvariable=key, font=font_, width=25)
-    mail_canvas.create_window(180, 39, anchor='nw', window=e_rAddr)
+    mail_canvas.create_window(180, 45, anchor='nw', window=e_rAddr)
 
-    button = Button(mail_canvas, text='전송', command=send_Mail, bg='white', font=font_, height=1)
-    mail_canvas.create_window(470, 33, anchor='nw', window=button)
+    send_img = func.loadImage('send_color.png', 35)
+    button = Button(mail_canvas, image=send_img, activebackground='white', command=send_Mail, bg='white', width=45, height=45)
+    button.image = send_img
+    mail_canvas.create_window(470, 32, anchor='nw', window=button)
 
-    font_ = font.Font(window, size=10, weight='normal', family='Consolas')
-
-    b_close = Button(mail_canvas, text='X', bg='red', command=closeMail, font=font_)
-    mail_canvas.create_window(523, 0, anchor='nw', window=b_close)
+    close_img = func.loadImage('close_white.png', 30)
+    b_close = Button(mail_canvas, image=close_img, bg=basic_color1, activebackground=basic_color1, command=closeMail, width=30, height=30)
+    b_close.image = close_img
+    mail_canvas.create_window(525, 0, anchor='nw', window=b_close)
 
     objects.append(mail_myframe)
     objects.append(mail_canvas)
@@ -437,9 +439,10 @@ def showGraph():    # 그래프 보여주기
         label.place(x=x+l+55, y=y+20*i+y_dist*i-4)
         i += 1
 
-    font_ = font.Font(window, size=15, weight='normal', family='Consolas')
-    b_close = Button(graph_canvas, text='X', bg='red', command=closeGraph, width=3, font=font_)
-    graph_canvas.create_window(515, 2, anchor='nw', window=b_close)
+    close_img = func.loadImage('close_white.png', 45)
+    b_close = Button(graph_canvas, image=close_img, bg=basic_color1, activebackground=basic_color1, command=closeGraph, width=45, height=45)
+    b_close.image = close_img
+    graph_canvas.create_window(510, 0, anchor='nw', window=b_close)
 
     objects.append(graph_myframe)
     objects.append(graph_canvas)
@@ -449,14 +452,21 @@ def closeGraph():   # 그래프 닫기
     graph_canvas.destroy()
 def Init_threeButtons2():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
-    b_width, b_height = 8, 2
-    b_x, b_y = 145, 30   # 30
-    b_email = Button(window, text="이메일", command=Init_mailaddressEntry, font=font_, width=b_width, height=b_height)
-    b_graph = Button(window, text="그래프", command=showGraph, font=font_, width=b_width, height=b_height)
-    b_email.place(x=b_x, y=b_y)
+    b_width, b_height = 100, 100
+    b_x, b_y = 157, 23
+
+    mail_img = func.loadImage('mail_color.png', 80)
+    b_mail = Button(window, image=mail_img, bg='white', activebackground='white', command=Init_mailaddressEntry, width=b_width, height=b_height)
+    b_mail.image = mail_img
+
+    graph_img = func.loadImage('graph_color.png', 80)
+    b_graph = Button(window, image=graph_img, bg='white', activebackground='white', command=showGraph, font=font_, width=b_width, height=b_height)
+    b_graph.image = graph_img
+
+    b_mail.place(x=b_x, y=b_y)
     b_graph.place(x=b_x+180, y=b_y)
 
-    objects.append(b_email)
+    objects.append(b_mail)
     objects.append(b_graph)
 def Init_favorite_bookList():
     myframe = Frame(window)
@@ -474,16 +484,21 @@ def Init_favorite_bookList():
         img = func.getImage(favorite_bookList[i].image)
         button = Button(canvas, image=img, command=partial(openBook, favorite_bookList[i], True), width=90, height=130)
         button.image = img  # 해줘야 이미지 뜸
-        canvas.create_window(15, 20 + y_distance * i, anchor='nw', window=button)
+        canvas.create_window(15, 20+y_distance*i, anchor='nw', window=button)
+
+        font_ = font.Font(window, size=10, weight='normal', family='Consolas')
+        l_bg = Label(canvas, font=font_, bg='white', bd=1, relief='ridge', width=58, height=10, anchor='w')
+        canvas.create_window(120, 14+y_distance*i, anchor='nw', window=l_bg)
+
         # 책 info1
         font_ = font.Font(window, size=13, weight='normal', family='Consolas')  # 책 info1 라벨 폰트
         info1 = '제목: '+func.changeText_long(favorite_bookList[i].title)+'\n저자: '+func.changeText_long(favorite_bookList[i].author)
-        l_bookInfo1 = Label(canvas, text=info1, font=font_, width=44, height=5, anchor='w', justify=LEFT)
-        canvas.create_window(125, 15 + y_distance * i, anchor='nw', window=l_bookInfo1)
+        l_bookInfo1 = Label(canvas, text=info1, font=font_, bg='white', width=44, height=5, anchor='w', justify=LEFT)
+        canvas.create_window(125, 15+y_distance*i, anchor='nw', window=l_bookInfo1)
         # 책 info2
         font_ = font.Font(window, size=8, weight='normal', family='Consolas')  # 책 info2 라벨 폰트
         info2 = '책 정보 링크\n' + favorite_bookList[i].link
-        l_bookInfo2 = Label(canvas, text=info2, font=font_, width=66, height=3, anchor='w', justify=LEFT, fg='blue', cursor='hand2')
+        l_bookInfo2 = Label(canvas, text=info2, font=font_, bg='white', width=66, height=3, anchor='w', justify=LEFT, fg='blue', cursor='hand2')
         l_bookInfo2.bind('<Button-1>', lambda e: func.callback(favorite_bookList[i].link))
         canvas.create_window(125, 115 + y_distance * i, anchor='nw', window=l_bookInfo2)
 
@@ -559,6 +574,9 @@ favorite_bookList = []  # 즐겨찾기 책 리스트
 basic_bookList = []  # home에서 추천해줄 대표분야 7가지 책
 set_basic_bookList()
 
+favorite_bookList.append(basic_bookList[0][0])
+favorite_bookList.append(basic_bookList[0][1])
+favorite_bookList.append(basic_bookList[0][2])
 Init_Scene_Home()
 
 #telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화 / 베스트셀러 봇 2021 텔레그램에 검색

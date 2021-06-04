@@ -24,14 +24,9 @@ def getImage_Big(url):      # url로 해당 이미지 생성
     img = img.resize((150, 197))   # image 크기 조정
     img = ImageTk.PhotoImage(img)
     return img
-def loadImage(filename):    # menu에 쓰이는 이미지들 불러오기 및 크기 조정
+def loadImage(filename, size):    # menu에 쓰이는 이미지들 불러오기 및 크기 조정
     img = Image.open('res/'+filename)
-    img = img.resize((60, 60))
-    img = ImageTk.PhotoImage(img)
-    return img
-def loadImage_small(filename):
-    img = Image.open('res/'+filename)
-    img = img.resize((35, 35))
+    img = img.resize((size, size))
     img = ImageTk.PhotoImage(img)
     return img
 def changeTitle(title):     # 책 제목 라벨 크기에 맞게 변경
