@@ -138,6 +138,10 @@ def Init_menuButton():      # 하단의 메뉴(홈,검색,즐겨찾기,도서관
 ################################################################
 # home
 ################################################################
+def set_basic_bookList():   # home에서 기본적으로 추천해줄 대표분야 7가지 책 리스트
+    global basic_bookList
+    for i in range(7):
+        basic_bookList.append(getBook('d_catg', str(list(categoryDict.values())[i]), 4))
 def Init_topLabel():
     font_ = font.Font(window, size=30, weight='bold', family='Consolas')
     topLabel = Label(window, text='Bestseller', font=font_)
@@ -145,6 +149,7 @@ def Init_topLabel():
 
     objects.append(topLabel)
 def Init_basic_bookList():
+    global basic_bookList
     myframe = Frame(window)
     myframe.place(x=20, y=100)
     scrollbar = Scrollbar(myframe)
@@ -163,15 +168,14 @@ def Init_basic_bookList():
         canvas.create_window(20, 15 + y_distance * i, anchor='nw', window=label)
 
         font_ = font.Font(window, size=13, weight='normal', family='Consolas')  # 제목 라벨 폰트
-        bookList = getBook('d_catg', str(list(categoryDict.values())[i]), 4)
         for j in range(4):  # 분야별 4권 책 이미지(버튼), 제목(라벨)
             # 분야별 책 이미지 버튼
-            img = func.getImage(bookList[j].image)
-            button = Button(canvas, image=img, command=partial(openBook, bookList[j], False), width=90, height=130)
+            img = func.getImage(basic_bookList[i][j].image)
+            button = Button(canvas, image=img, command=partial(openBook, basic_bookList[i][j], False), width=90, height=130)
             button.image = img  # 해줘야 이미지 뜸
             canvas.create_window(30+130*j, 65+y_distance*i, anchor='nw', window=button)
             # 분야별 책 제목
-            label = Label(canvas, text=func.changeTitle(bookList[j].title), font=font_, width=12, height=3)
+            label = Label(canvas, text=func.changeTitle(basic_bookList[i][j].title), font=font_, width=12, height=3)
             canvas.create_window(30-9+130*j, 210+y_distance*i, anchor='nw', window=label)
 
     objects.append(canvas)
@@ -492,9 +496,12 @@ objects = []    # state 전환시 삭제될 객체들 보관
 scene = 'home'  # 시작 scene = home
 favorite_bookList = []  # 즐겨찾기 책 리스트
 
+basic_bookList = []  # home에서 추천해줄 대표분야 7가지 책
+set_basic_bookList()
+
 Init_Scene_Home()
 
-telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화
+#telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화 / 베스트셀러 봇 2021 텔레그램에 검색
 
 window.mainloop()
 
