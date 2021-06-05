@@ -57,10 +57,16 @@ def changeText(text):     # 책 상세정보에서 제목, 저자 크키에 맞�
         c_text += text[:14]
         c_text += '\n'
         text = text[14:]
+        i = 0
         while len(text) > 17:
+            if i == 2:
+                c_text += text[:14]
+                c_text += '...'
+                return c_text
             c_text += text[:17]
             c_text += '\n'
             text = text[17:]
+            i += 1
     c_text += text
     return c_text
 def changeText_long(text):     # 즐겨찾기에서 제목, 저자 크키에 맞게 변경 / 첫번째 줄은 22자 그 뒤부터는 한줄에 25자
