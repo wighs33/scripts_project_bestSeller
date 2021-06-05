@@ -349,15 +349,15 @@ def searchBook():   # 키워드값을 가지고 책 리스트를 만듬
         keyword = combobox.get()
     else:
         keyword = e_search.get()
-    # 최대 20권의 검색 결과를 갖는 북 리스트 생성
+    # 최대 28권의 검색 결과를 갖는 북 리스트 생성
     if search_state == 'category':
-        bookList = getBook("d_catg", str(categoryDict[keyword]), 20)
+        bookList = getBook("d_catg", str(categoryDict[keyword]), 28)
     elif search_state == 'author':
-        bookList = getBook("d_auth", keyword, 20)
+        bookList = getBook("d_auth", keyword, 28)
     elif search_state == 'title':
-        bookList = getBook("d_titl", keyword, 20)
+        bookList = getBook("d_titl", keyword, 28)
     showBookList(bookList)
-def showBookList(bookList): # 최대 20권의 겸색 결과를 화면에 띄움
+def showBookList(bookList): # 최대 28권의 겸색 결과를 화면에 띄움
     global book_Canvas
     y_distance = 220
     font_ = font.Font(window, size=13, weight='normal', family='Consolas')
@@ -373,7 +373,7 @@ def showBookList(bookList): # 최대 20권의 겸색 결과를 화면에 띄움
         label = Label(book_Canvas, text=func.changeTitle(book.title), bg='white', bd=1, relief='ridge', font=font_, width=12, height=3)
         book_Canvas.create_window(30-9+130*(i%4), 160+y_distance*(i//4), anchor='nw', window=label)
         i += 1
-def Init_threeButtons1():
+def Init_threeButtons():
     global b_category, b_author, b_title
     b_width, b_height = 100, 100
     b_x, b_y = 88, 25
@@ -411,7 +411,7 @@ def Init_booklistFrame():
     myframe.place(x=20, y=200)
     scrollbar = Scrollbar(myframe)
     scrollbar.pack(side=RIGHT, fill=Y)
-    book_Canvas = Canvas(myframe, bg='white', width=540, height=440, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 1125))
+    book_Canvas = Canvas(myframe, bg='white', width=540, height=440, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 1575))    # 1줄(4권당 225)
     book_Canvas.pack()
     scrollbar.config(command=book_Canvas.yview)
 
@@ -420,7 +420,7 @@ def Init_booklistFrame():
 def Init_Scene_Search():
     global search_state
     search_state = 'category'   # 디폴트 - 분야별 검색
-    Init_threeButtons1()     # 분야, 저자, 제목 버튼 생성
+    Init_threeButtons()     # 분야, 저자, 제목 버튼 생성
     Init_searchKeyword()  # 검색 키워드 입력받는 combobox(분야) 또는 entry(저자,제목) 생성 & 검색 버튼 생성 / 디폴트 - 분야 검색
     Init_booklistFrame()  # 검색에 따라 추천하는 책들 띄울 프레임 생성
 ################################################################
@@ -510,16 +510,16 @@ def closeGraph():   # 그래프 닫기
     global graph_myframe, graph_canvas
     graph_myframe.destroy()
     graph_canvas.destroy()
-def Init_threeButtons2():
+def Init_twoButtons():
     font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 100, 100
     b_x, b_y = 157, 23
 
-    mail_img = func.loadImage('mail_color.png', 80)
+    mail_img = func.loadImage('mail_color.png', 90)
     b_mail = Button(window, image=mail_img, bg='white', activebackground='white', command=Init_mailaddressEntry, width=b_width, height=b_height)
     b_mail.image = mail_img
 
-    graph_img = func.loadImage('graph_color.png', 80)
+    graph_img = func.loadImage('graph_color.png', 90, 95)
     b_graph = Button(window, image=graph_img, bg='white', activebackground='white', command=showGraph, font=font_, width=b_width, height=b_height)
     b_graph.image = graph_img
 
@@ -564,7 +564,7 @@ def Init_favorite_bookList():
     objects.append(canvas)
     objects.append(myframe)
 def Init_Scene_Favorites():
-    Init_threeButtons2()  # 이메일, 텔레그램, 그래프 버튼 생성
+    Init_twoButtons()  # 이메일, 텔레그램, 그래프 버튼 생성
     Init_favorite_bookList()  # 즐겨찾기 리스트에 있는 책들 띄울 프레임 생성
 ################################################################
 # library
