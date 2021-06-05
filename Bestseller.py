@@ -6,6 +6,9 @@ import func
 from openAPI import *
 import gmail
 import telegram
+import threading
+import folium
+from map import *
 # import spam1
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
@@ -569,36 +572,79 @@ def Init_Scene_Favorites():
 ################################################################
 # library
 ################################################################
-def addressSearch():     # 주소콤보박스, 검색버튼
+def searchAddress():
+    global addressEntry, libraryFrame
+
+    # 주소엔트리박스
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
     key = StringVar()
     key.set('주소 입력')
-    addressEntry = Entry(window, textvariable=key, justify=LEFT, font=font_)
-    addressEntry.place(x=80, y=80, width=350, height=30)
+    addressEntry = Entry(window, width=30, textvariable=key, justify=LEFT, font=font_)
+    addressEntry.place(x=80, y=50, width=350, height=30)
 
+    # 검색버튼
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    searchButton = Button(window, text="검색", command=showAddressList, font=font_, width=5)
-    searchButton.place(x=450, y=74)
+    searchButton = Button(window, text="검색", command=searchLibrary, font=font_, width=5)
+    searchButton.place(x=450, y=44)
+
+    # 화면
+    libraryFrame = Frame(window, width=550, height=490)
+    libraryFrame.place(x=20, y=150)
+
+    # thread = threading.Thread(target=showMap, args=(libraryFrame,))
+    # thread.daemon = True
+    # thread.start()
 
     objects.append(addressEntry)
     objects.append(searchButton)
+    objects.append(libraryFrame)
 
-def showAddressList():
-    global addressCanvas
-    myframe = Frame(window)
-    myframe.place(x=20, y=200)
-    scrollbar = Scrollbar(myframe)
-    scrollbar.pack(side=RIGHT, fill=Y)
-    addressCanvas = Canvas(myframe, bg='white', width=400, height=440, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 900))
-    addressCanvas.pack()
-    scrollbar.config(command=addressCanvas.yview)
+def searchLibrary():
+    global addressEntry, libraryCombobox, libaryList
 
-    objects.append(addressCanvas)
-    objects.append(myframe)
+    libaryList = getLibrary(addressEntry.get(), 15)
+    titleList = []
+    for library in libaryList:
+        titleList.append(library.title)
+
+    # 콤보박스
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    libraryCombobox = tkinter.ttk.Combobox(window, width=30, font=font_, values=titleList)
+    libraryCombobox.place(x=80, y=90)
+    libraryCombobox.set('도서관 선택')  # combobox 텍스트 디폴트 값
+    window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
+
+    # 검색버튼
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    searchButton = Button(window, text="검색", command=updateMap, font=font_, width=5)
+    searchButton.place(x=450, y=84)
+
+    objects.append(libraryCombobox)
+    objects.append(searchButton)
+
+def updateMap():
+    global libraryFrame, libaryList, libraryCombobox, thread
+
+    libraryPos = 0, 0
+
+    for library in libaryList:
+        if library.title == libraryCombobox.get():
+            libraryPos = library.mapx, library.mapy
+
+    # libraryPos = (127.002985471402, 37.4976237970439)
+    # 지도 저장
+    m = folium.Map(location=[libraryPos[1], libraryPos[0]], zoom_start=16)
+    folium.Marker([libraryPos[1], libraryPos[0]], popup=libraryCombobox.get()).add_to(m)
+    m.save('map.html')
+
+    # 브라우저를 위한 쓰레드 생성
+    thread = threading.Thread(target=showMap, args=(libraryFrame,))
+    thread.daemon = True
+    thread.start()
 
 def Init_Scene_Library():
-    addressSearch()
-    showAddressList()
+    searchAddress()
+    # showLibrary()
 
 basic_color1 = '#2fecb3'
 
