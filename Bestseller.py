@@ -6,7 +6,7 @@ import func
 from openAPI import *
 import gmail
 import telegram
-#import spam1
+# import spam1
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -569,7 +569,7 @@ def Init_Scene_Favorites():
 ################################################################
 # library
 ################################################################
-def addressSearch():     # 주소엔트리, 검색버튼
+def addressSearch():     # 주소콤보박스, 검색버튼
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
     key = StringVar()
     key.set('주소 입력')
@@ -596,12 +596,6 @@ def showAddressList():
     objects.append(addressCanvas)
     objects.append(myframe)
 
-def mapButton():
-    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    searchButton = Button(window, text="검색", command=searchBook, font=font_, width=5)
-    searchButton.place(x=450, y=74)
-
-    objects.append(searchButton)
 def Init_Scene_Library():
     addressSearch()
     showAddressList()
