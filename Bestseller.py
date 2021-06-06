@@ -8,7 +8,7 @@ import gmail
 import telegram
 import threading
 import folium
-from map import *
+import webbrowser
 # import spam1
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
@@ -580,20 +580,16 @@ def searchAddress():
     key = StringVar()
     key.set('주소 입력')
     addressEntry = Entry(window, width=30, textvariable=key, justify=LEFT, font=font_)
-    addressEntry.place(x=80, y=50, width=350, height=30)
+    addressEntry.place(x=80, y=60, width=350, height=30)
 
     # 검색버튼
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
     searchButton = Button(window, text="검색", command=searchLibrary, font=font_, width=5)
-    searchButton.place(x=450, y=44)
+    searchButton.place(x=450, y=54)
 
     # 화면
     libraryFrame = Frame(window, width=550, height=490)
     libraryFrame.place(x=20, y=150)
-
-    # thread = threading.Thread(target=showMap, args=(libraryFrame,))
-    # thread.daemon = True
-    # thread.start()
 
     objects.append(addressEntry)
     objects.append(searchButton)
@@ -623,7 +619,11 @@ def searchLibrary():
     objects.append(searchButton)
 
 def updateMap():
-    global libraryFrame, libaryList, libraryCombobox, thread
+    global libraryFrame, libaryList, libraryCombobox
+
+    # libraryFrame.destroy()
+    # libraryFrame = Frame(window, width=550, height=490)
+    # libraryFrame.place(x=20, y=150)
 
     libraryPos = 0, 0
 
@@ -631,16 +631,12 @@ def updateMap():
         if library.title == libraryCombobox.get():
             libraryPos = library.mapx, library.mapy
 
-    # libraryPos = (127.002985471402, 37.4976237970439)
     # 지도 저장
     m = folium.Map(location=[libraryPos[1], libraryPos[0]], zoom_start=16)
     folium.Marker([libraryPos[1], libraryPos[0]], popup=libraryCombobox.get()).add_to(m)
     m.save('map.html')
 
-    # 브라우저를 위한 쓰레드 생성
-    thread = threading.Thread(target=showMap, args=(libraryFrame,))
-    thread.daemon = True
-    thread.start()
+    webbrowser.open('map.html')
 
 def Init_Scene_Library():
     searchAddress()
