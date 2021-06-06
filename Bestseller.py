@@ -572,7 +572,7 @@ def Init_Scene_Favorites():
 ################################################################
 # library
 ################################################################
-def searchAddress():
+def searchByAddress():
     global addressEntry, libraryFrame
 
     # 주소엔트리박스
@@ -584,42 +584,55 @@ def searchAddress():
 
     # 검색버튼
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    searchButton = Button(window, text="검색", command=searchLibrary, font=font_, width=5)
+    searchButton = Button(window, text="검색", command=showLibraryList, font=font_, width=5)
     searchButton.place(x=450, y=54)
 
     # 화면
-    libraryFrame = Frame(window, width=550, height=490)
-    libraryFrame.place(x=20, y=150)
+    # libraryFrame = Frame(window)
+    # libraryFrame.place(x=20, y=150)
+    # scrollbar = Scrollbar(libraryFrame)
+    # scrollbar.pack(side=RIGHT, fill=Y)
+    # libraryCanvas = Canvas(libraryFrame, bg='white', width=420, height=490, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2430))
+    # libraryCanvas.pack()
+    # scrollbar.config(command=libraryCanvas.yview)
 
     objects.append(addressEntry)
     objects.append(searchButton)
-    objects.append(libraryFrame)
+    # objects.append(libraryFrame)
+    # objects.append(libraryCanvas)
 
-def searchLibrary():
-    global addressEntry, libraryCombobox, libaryList
+def showLibraryList():
+    global addressEntry, libraryListbox, libraryList
 
-    libaryList = getLibrary(addressEntry.get(), 15)
+    libraryList = getLibrary(addressEntry.get(), 15)
     titleList = []
-    for library in libaryList:
+    for library in libraryList:
         titleList.append(library.title)
 
     # 콤보박스
-    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    libraryCombobox = tkinter.ttk.Combobox(window, width=30, font=font_, values=titleList)
-    libraryCombobox.place(x=80, y=90)
-    libraryCombobox.set('도서관 선택')  # combobox 텍스트 디폴트 값
-    window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
+    # scrollbar = Scrollbar(window)
+    # scrollbar.pack(side=RIGHT, fill=Y)
+    # font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    # libraryListbox = tkinter.Listbox(window, bg='white', width=10, height=10, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2430))
+    # libraryListbox.place(x=80, y=90)
+    # libraryListbox.set('도서관 선택')  # combobox 텍스트 디폴트 값
+    # window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
+
+    libraryListbox = tkinter.Listbox(window, width=60, height=30)
+    libraryListbox.place(x=20, y=160)
+    for name in titleList:
+        libraryListbox.insert(END, name)
 
     # 검색버튼
-    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    searchButton = Button(window, text="검색", command=updateMap, font=font_, width=5)
-    searchButton.place(x=450, y=84)
+    # font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    # searchButton = Button(window, text="검색", command=showMapMarkedLibrary, font=font_, width=5)
+    # searchButton.place(x=450, y=84)
 
-    objects.append(libraryCombobox)
-    objects.append(searchButton)
+    objects.append(libraryListbox)
+    # objects.append(searchButton)
 
-def updateMap():
-    global libraryFrame, libaryList, libraryCombobox
+def showMapMarkedLibrary():
+    global libraryFrame, libraryList, libraryCombobox
 
     # libraryFrame.destroy()
     # libraryFrame = Frame(window, width=550, height=490)
@@ -627,7 +640,7 @@ def updateMap():
 
     libraryPos = 0, 0
 
-    for library in libaryList:
+    for library in libraryList:
         if library.title == libraryCombobox.get():
             libraryPos = library.mapx, library.mapy
 
@@ -639,7 +652,7 @@ def updateMap():
     webbrowser.open('map.html')
 
 def Init_Scene_Library():
-    searchAddress()
+    searchByAddress()
     # showLibrary()
 
 basic_color1 = '#2fecb3'
