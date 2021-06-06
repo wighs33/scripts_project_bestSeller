@@ -593,12 +593,21 @@ def searchByAddress():
     libraryListbox = tkinter.Listbox(window, width=33, height=15, relief='solid', bd=2, fg='cyan',
                                      selectforeground='yellow', font=font_)
     libraryListbox.place(x=20, y=200)
+
+    # 검색버튼
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    mapButton = Button(window, image=menuImageList[0][1], bg=selected_color_bg, activebackground='white',
+                          command=showMapMarkedLibrary, width=100, height=100)
+    mapButton.place(x=470, y=380)
+
     objects.append(addressEntry)
     objects.append(searchButton)
     objects.append(libraryListbox)
+    objects.append(mapButton)
 
 def updateLibraryList():
     global addressEntry, libraryListbox, libraryList
+    libraryListbox.delete(0, END)
 
     libraryList = getLibrary(addressEntry.get(), 15)
     titleList = []
@@ -607,14 +616,6 @@ def updateLibraryList():
 
     for name in titleList:
         libraryListbox.insert(END, name)
-
-    # 검색버튼
-    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    searchButton = Button(window, image=menuImageList[0][1], bg=selected_color_bg, activebackground='white',
-                          command=showMapMarkedLibrary, width=100, height=100)
-    searchButton.place(x=470, y=380)
-
-    objects.append(searchButton)
 
 def showMapMarkedLibrary():
     global libraryList, libraryListbox
