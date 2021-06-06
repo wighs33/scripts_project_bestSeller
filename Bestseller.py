@@ -8,7 +8,7 @@ import gmail
 import telegram
 import threading
 import folium
-from map import *
+import webbrowser
 # import spam1
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
@@ -572,79 +572,70 @@ def Init_Scene_Favorites():
 ################################################################
 # library
 ################################################################
-def searchAddress():
-    global addressEntry, libraryFrame
+def searchByAddress():
+    global addressEntry, libraryFrame, libraryListbox
 
     # 주소엔트리박스
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
     key = StringVar()
     key.set('주소 입력')
     addressEntry = Entry(window, width=30, textvariable=key, justify=LEFT, font=font_)
-    addressEntry.place(x=80, y=50, width=350, height=30)
+    addressEntry.place(x=80, y=80, width=350, height=30)
 
     # 검색버튼
-    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    searchButton = Button(window, text="검색", command=searchLibrary, font=font_, width=5)
-    searchButton.place(x=450, y=44)
+    search_img = func.loadImage('search_color.png', 35)
+    searchButton = Button(window, image=search_img, bg='white', activebackground='white', command=updateLibraryList, width=45, height=45)
+    searchButton.image = search_img
+    searchButton.place(x=450, y=70)
 
-    # 화면
-    libraryFrame = Frame(window, width=550, height=490)
-    libraryFrame.place(x=20, y=150)
-
-    # thread = threading.Thread(target=showMap, args=(libraryFrame,))
-    # thread.daemon = True
-    # thread.start()
-
+    # 리스트박스
+    font_ = font.Font(window, size=18, weight='bold', family='Consolas')
+    libraryListbox = tkinter.Listbox(window, width=33, height=15, relief='solid', bd=2, fg='cyan',
+                                     selectforeground='yellow', font=font_)
+    libraryListbox.place(x=20, y=200)
     objects.append(addressEntry)
     objects.append(searchButton)
-    objects.append(libraryFrame)
+    objects.append(libraryListbox)
 
-def searchLibrary():
-    global addressEntry, libraryCombobox, libaryList
+def updateLibraryList():
+    global addressEntry, libraryListbox, libraryList
 
-    libaryList = getLibrary(addressEntry.get(), 15)
+    libraryList = getLibrary(addressEntry.get(), 15)
     titleList = []
-    for library in libaryList:
+    for library in libraryList:
         titleList.append(library.title)
 
-    # 콤보박스
-    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    libraryCombobox = tkinter.ttk.Combobox(window, width=30, font=font_, values=titleList)
-    libraryCombobox.place(x=80, y=90)
-    libraryCombobox.set('도서관 선택')  # combobox 텍스트 디폴트 값
-    window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
+    for name in titleList:
+        libraryListbox.insert(END, name)
 
     # 검색버튼
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    searchButton = Button(window, text="검색", command=updateMap, font=font_, width=5)
-    searchButton.place(x=450, y=84)
+    searchButton = Button(window, image=menuImageList[0][1], bg=selected_color_bg, activebackground='white',
+                          command=showMapMarkedLibrary, width=100, height=100)
+    searchButton.place(x=470, y=380)
 
-    objects.append(libraryCombobox)
     objects.append(searchButton)
 
-def updateMap():
-    global libraryFrame, libaryList, libraryCombobox, thread
+def showMapMarkedLibrary():
+    global libraryList, libraryListbox
 
     libraryPos = 0, 0
 
-    for library in libaryList:
-        if library.title == libraryCombobox.get():
-            libraryPos = library.mapx, library.mapy
+    tmp = int(libraryListbox.curselection()[0])
 
-    # libraryPos = (127.002985471402, 37.4976237970439)
+    for i in range(len(libraryList)):
+        if i == tmp:
+            libraryPos = libraryList[i].mapx, libraryList[i].mapy
+
     # 지도 저장
     m = folium.Map(location=[libraryPos[1], libraryPos[0]], zoom_start=16)
-    folium.Marker([libraryPos[1], libraryPos[0]], popup=libraryCombobox.get()).add_to(m)
+    folium.Marker([libraryPos[1], libraryPos[0]], popup=libraryList[tmp].title).add_to(m)
     m.save('map.html')
 
-    # 브라우저를 위한 쓰레드 생성
-    thread = threading.Thread(target=showMap, args=(libraryFrame,))
-    thread.daemon = True
-    thread.start()
+    webbrowser.open('map.html')
 
 def Init_Scene_Library():
-    searchAddress()
-    # showLibrary()
+    searchByAddress()
 
 basic_color1 = '#2fecb3'
 
