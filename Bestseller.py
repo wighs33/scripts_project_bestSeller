@@ -6,7 +6,6 @@ import func
 from openAPI import *
 import gmail
 import telegram
-import threading
 import folium
 import webbrowser
 # import spam1
@@ -18,7 +17,7 @@ categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자�
 
 ################################################################
 # common
-################################################################'
+################################################################
 def openBook(book):     # 책 상세정보창 열기
     global new_myframe, new_canvas, b_menu, scene, topLabel
     for b in b_menu:
@@ -163,7 +162,6 @@ def menuLibrary():      # 메뉴 중 도서관버튼 클릭 시 호출
                 b_menu[i].image = menuImageList[i][0]
 def Init_menuButton():      # 하단의 메뉴(홈,검색,즐겨찾기,도서관) 버튼 생성
     global b_menu, menuImageList
-    font_ = font.Font(window, size=20, weight='bold', family='Consolas')
     b_width, b_height = 150, 82
     b_x, b_y = 0, 662
     b_menu = []
@@ -241,78 +239,71 @@ def Init_Scene_Home():
 ################################################################
 # search
 ################################################################
-def searchCategory():   # 분야별 검색
-    global search_state, combobox, e_search, b_category, b_author, b_title
-    if search_state != 'category':  # 저자, 제목 검색에서 분야 검색으로 전환하는 경우 - entry 삭제 후 combobox 생성
-        e_search.destroy()
-        objects.remove(e_search)
-        Init_Combobox()
-        b_category['bg'] = basic_color1
-        b_category['activebackground'] = basic_color1
-        category_img = func.loadImage('category_white.png', 90)
+def resetButtonImage(type):
+    global b_category, b_author, b_title
+    if type != 'category':
+        b_category['bg'] = 'white'
+        b_category['activebackground'] = 'white'
+        category_img = func.loadImage('category_color.png', 90)
         b_category['image'] = category_img
         b_category.image = category_img
 
+    if type != 'author':
         b_author['bg'] = 'white'
         b_author['activebackground'] = 'white'
         author_img = func.loadImage('author_color.png', 90)
         b_author['image'] = author_img
         b_author.image = author_img
 
+    if type != 'title':
         b_title['bg'] = 'white'
         b_title['activebackground'] = 'white'
         title_img = func.loadImage('title_color.png', 90)
         b_title['image'] = title_img
         b_title.image = title_img
+def searchCategory():   # 분야별 검색
+    global search_state, combobox, e_search, b_category
+    if search_state != 'category':  # 저자, 제목 검색에서 분야 검색으로 전환하는 경우 - entry 삭제 후 combobox 생성
+        e_search.destroy()
+        objects.remove(e_search)
+        Init_Combobox()
+
+        resetButtonImage('category')
+        b_category['bg'] = basic_color1
+        b_category['activebackground'] = basic_color1
+        category_img = func.loadImage('category_white.png', 90)
+        b_category['image'] = category_img
+        b_category.image = category_img
+
     search_state = 'category'
 def searchAuthor():     # 저자별 검색
-    global search_state, combobox, e_search, b_category, b_author, b_title
+    global search_state, combobox, e_search, b_author
     if search_state == 'category':  # 분야 검색에서 저자 검색으로 전환하는 경우 - combobox 삭제 후 entry 생성
         combobox.destroy()
         objects.remove(combobox)
     else:  # 저자 검색에서 저자 or 제목 버튼 클릭 -> entry 초기화
         e_search.destroy()
         objects.remove(e_search)
-    b_category['bg'] = 'white'
-    b_category['activebackground'] = 'white'
-    category_img = func.loadImage('category_color.png', 90)
-    b_category['image'] = category_img
-    b_category.image = category_img
 
+    resetButtonImage('author')
     b_author['bg'] = basic_color1
     b_author['activebackground'] = basic_color1
     author_img = func.loadImage('author_white.png', 90)
     b_author['image'] = author_img
     b_author.image = author_img
 
-    b_title['bg'] = 'white'
-    b_title['activebackground'] = 'white'
-    title_img = func.loadImage('title_color.png', 90)
-    b_title['image'] = title_img
-    b_title.image = title_img
-
     search_state = 'author'
     Init_searchEntry()
 def searchTitle():      # 제목 검색
-    global search_state, combobox, e_search, b_category, b_author, b_title
+    global search_state, combobox, e_search, b_title
     if search_state == 'category':  # 분야 검색에서 제목 검색으로 전환하는 경우 - combobox 삭제 후 entry 생성
         combobox.destroy()
         objects.remove(combobox)
     else:  # 제목 검색에서 제목 or 저자 버튼 클릭 -> entry 초기화
         e_search.destroy()
         objects.remove(e_search)
-    b_category['bg'] = 'white'
-    b_category['activebackground'] = 'white'
-    category_img = func.loadImage('category_color.png', 90)
-    b_category['image'] = category_img
-    b_category.image = category_img
 
-    b_author['bg'] = 'white'
-    b_author['activebackground'] = 'white'
-    author_img = func.loadImage('author_color.png', 90)
-    b_author['image'] = author_img
-    b_author.image = author_img
-
+    resetButtonImage('title')
     b_title['bg'] = basic_color1
     b_title['activebackground'] = basic_color1
     title_img = func.loadImage('title_white.png', 90)
@@ -438,17 +429,15 @@ def Init_mailaddressEntry():    # 메일 받을 주소 입력하는 엔트리 �
 
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
 
-    label = Label(mail_canvas, text='메일 주소 입력:', bg='white', font=font_, height=1)
-    mail_canvas.create_window(15, 44, anchor='nw', window=label)
-
     key = StringVar()
-    e_rAddr = Entry(mail_canvas, textvariable=key, font=font_, width=25)
-    mail_canvas.create_window(180, 45, anchor='nw', window=e_rAddr)
+    key.set('메일 주소 입력')
+    e_rAddr = Entry(mail_canvas, textvariable=key, font=font_, width=35)
+    mail_canvas.create_window(45, 45, anchor='nw', window=e_rAddr)
 
     send_img = func.loadImage('send_color.png', 35)
     button = Button(mail_canvas, image=send_img, activebackground='white', command=send_Mail, bg='white', width=45, height=45)
     button.image = send_img
-    mail_canvas.create_window(470, 32, anchor='nw', window=button)
+    mail_canvas.create_window(445, 32, anchor='nw', window=button)
 
     close_img = func.loadImage('close_white.png', 30)
     b_close = Button(mail_canvas, image=close_img, bg=basic_color1, activebackground=basic_color1, command=closeMail, width=30, height=30)
@@ -580,25 +569,25 @@ def searchByAddress():
     key = StringVar()
     key.set('주소 입력')
     addressEntry = Entry(window, width=30, textvariable=key, justify=LEFT, font=font_)
-    addressEntry.place(x=80, y=80, width=350, height=30)
+    addressEntry.place(x=90, y=70, width=350, height=30)
 
     # 검색버튼
     search_img = func.loadImage('search_color.png', 35)
     searchButton = Button(window, image=search_img, bg='white', activebackground='white', command=updateLibraryList, width=45, height=45)
     searchButton.image = search_img
-    searchButton.place(x=450, y=70)
+    searchButton.place(x=460, y=60)
 
     # 리스트박스
-    font_ = font.Font(window, size=18, weight='bold', family='Consolas')
-    libraryListbox = tkinter.Listbox(window, width=33, height=15, relief='solid', bd=2, fg='cyan',
-                                     selectforeground='yellow', font=font_)
-    libraryListbox.place(x=20, y=200)
-
-    # 검색버튼
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    mapButton = Button(window, image=menuImageList[0][1], bg=selected_color_bg, activebackground='white',
+    libraryListbox = tkinter.Listbox(window, width=35, height=18, font=font_)
+    libraryListbox.place(x=30, y=160)
+
+    # 지도버튼
+    map_img = func.loadImage('map_color.png', 100)
+    mapButton = Button(window, image=map_img, bg='white', activebackground='white',
                           command=showMapMarkedLibrary, width=100, height=100)
-    mapButton.place(x=470, y=380)
+    mapButton.image = map_img
+    mapButton.place(x=460, y=325)
 
     objects.append(addressEntry)
     objects.append(searchButton)
@@ -658,7 +647,7 @@ set_basic_bookList()
 
 Init_Scene_Home()
 
-#telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화 / 베스트셀러 봇 2021 텔레그램에 검색
+telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화 / 베스트셀러 봇 2021 텔레그램에 검색
 
 window.mainloop()
 
