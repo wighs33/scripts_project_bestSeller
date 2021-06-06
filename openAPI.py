@@ -93,8 +93,3 @@ def getLibrary(encText, nLibraries):
         libraryList.append(library_)
     conn.close()
     return libraryList
-
-
-d = getBook("d_titl", "나미야 잡화점의 기적", 1)
-for i in d:
-    print(i.description)
