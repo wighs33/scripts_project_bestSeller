@@ -573,35 +573,31 @@ def Init_Scene_Favorites():
 # library
 ################################################################
 def searchByAddress():
-    global addressEntry, libraryFrame
+    global addressEntry, libraryFrame, libraryListbox
 
     # 주소엔트리박스
     font_ = font.Font(window, size=15, weight='bold', family='Consolas')
     key = StringVar()
     key.set('주소 입력')
     addressEntry = Entry(window, width=30, textvariable=key, justify=LEFT, font=font_)
-    addressEntry.place(x=80, y=60, width=350, height=30)
+    addressEntry.place(x=80, y=80, width=350, height=30)
 
     # 검색버튼
-    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    searchButton = Button(window, text="검색", command=showLibraryList, font=font_, width=5)
-    searchButton.place(x=450, y=54)
+    search_img = func.loadImage('search_color.png', 35)
+    searchButton = Button(window, image=search_img, bg='white', activebackground='white', command=updateLibraryList, width=45, height=45)
+    searchButton.image = search_img
+    searchButton.place(x=450, y=70)
 
-    # 화면
-    # libraryFrame = Frame(window)
-    # libraryFrame.place(x=20, y=150)
-    # scrollbar = Scrollbar(libraryFrame)
-    # scrollbar.pack(side=RIGHT, fill=Y)
-    # libraryCanvas = Canvas(libraryFrame, bg='white', width=420, height=490, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2430))
-    # libraryCanvas.pack()
-    # scrollbar.config(command=libraryCanvas.yview)
-
+    # 리스트박스
+    font_ = font.Font(window, size=18, weight='bold', family='Consolas')
+    libraryListbox = tkinter.Listbox(window, width=33, height=15, relief='solid', bd=2, fg='cyan',
+                                     selectforeground='yellow', font=font_)
+    libraryListbox.place(x=20, y=200)
     objects.append(addressEntry)
     objects.append(searchButton)
-    # objects.append(libraryFrame)
-    # objects.append(libraryCanvas)
+    objects.append(libraryListbox)
 
-def showLibraryList():
+def updateLibraryList():
     global addressEntry, libraryListbox, libraryList
 
     libraryList = getLibrary(addressEntry.get(), 15)
@@ -609,51 +605,37 @@ def showLibraryList():
     for library in libraryList:
         titleList.append(library.title)
 
-    # 콤보박스
-    # scrollbar = Scrollbar(window)
-    # scrollbar.pack(side=RIGHT, fill=Y)
-    # font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    # libraryListbox = tkinter.Listbox(window, bg='white', width=10, height=10, yscrollcommand=scrollbar.set, scrollregion=(0, 0, 0, 2430))
-    # libraryListbox.place(x=80, y=90)
-    # libraryListbox.set('도서관 선택')  # combobox 텍스트 디폴트 값
-    # window.option_add('*TCombobox*Listbox.font', font_)  # combobox에 font 적용
-
-    libraryListbox = tkinter.Listbox(window, width=60, height=30)
-    libraryListbox.place(x=20, y=160)
     for name in titleList:
         libraryListbox.insert(END, name)
 
     # 검색버튼
-    # font_ = font.Font(window, size=15, weight='bold', family='Consolas')
-    # searchButton = Button(window, text="검색", command=showMapMarkedLibrary, font=font_, width=5)
-    # searchButton.place(x=450, y=84)
+    font_ = font.Font(window, size=15, weight='bold', family='Consolas')
+    searchButton = Button(window, image=menuImageList[0][1], bg=selected_color_bg, activebackground='white',
+                          command=showMapMarkedLibrary, width=100, height=100)
+    searchButton.place(x=470, y=380)
 
-    objects.append(libraryListbox)
-    # objects.append(searchButton)
+    objects.append(searchButton)
 
 def showMapMarkedLibrary():
-    global libraryFrame, libraryList, libraryCombobox
-
-    # libraryFrame.destroy()
-    # libraryFrame = Frame(window, width=550, height=490)
-    # libraryFrame.place(x=20, y=150)
+    global libraryList, libraryListbox
 
     libraryPos = 0, 0
 
-    for library in libraryList:
-        if library.title == libraryCombobox.get():
-            libraryPos = library.mapx, library.mapy
+    tmp = int(libraryListbox.curselection()[0])
+
+    for i in range(len(libraryList)):
+        if i == tmp:
+            libraryPos = libraryList[i].mapx, libraryList[i].mapy
 
     # 지도 저장
     m = folium.Map(location=[libraryPos[1], libraryPos[0]], zoom_start=16)
-    folium.Marker([libraryPos[1], libraryPos[0]], popup=libraryCombobox.get()).add_to(m)
+    folium.Marker([libraryPos[1], libraryPos[0]], popup=libraryList[tmp].title).add_to(m)
     m.save('map.html')
 
     webbrowser.open('map.html')
 
 def Init_Scene_Library():
     searchByAddress()
-    # showLibrary()
 
 basic_color1 = '#2fecb3'
 
