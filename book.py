@@ -18,3 +18,4 @@ class Book:
         self.price = data[4].firstChild.nodeValue
         self.pubdate = data[7].firstChild.nodeValue
         self.description = re.sub('(<([^>]+)>)', '', data[9].firstChild.nodeValue) if data[9].firstChild else ''
+        self.description = self.description.replace("&#x0D;", " ")

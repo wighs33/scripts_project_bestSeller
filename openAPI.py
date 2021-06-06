@@ -95,6 +95,6 @@ def getLibrary(encText, nLibraries):
     return libraryList
 
 
-# d = getLibrary("서울시", 15)
-# for i in d:
-#     print(i.title, i.mapx, i.mapy)
+d = getBook("d_titl", "나미야 잡화점의 기적", 1)
+for i in d:
+    print(i.description)
