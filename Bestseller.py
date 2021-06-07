@@ -94,6 +94,17 @@ def removeFavorites(book):     # 책 즐겨찾기에서 삭제
     if book.favorites is True:
         book.favorites = False
         favorite_bookList.remove(book)
+def resetMenuButtonImage(type):     # 메튜 버튼들 이미지 지정 / 선택된 버튼은 다른 색상
+    global b_menu, menuImageList
+    for i in range(4):
+        if i == type:
+            b_menu[i]['bg'] = selected_color_bg
+            b_menu[i].configure(image=menuImageList[i][1])
+            b_menu[i].image = menuImageList[i][1]
+            continue
+        b_menu[i]['bg'] = default_color_bg
+        b_menu[i].configure(image=menuImageList[i][0])
+        b_menu[i].image = menuImageList[i][0]
 # 하단 메뉴버튼 4개(홈, 검색, 즐겨찾기, 도서관)
 def menuHome():         # 메뉴 중 홈버튼 클릭 시 호출
     global scene, b_menu, menuImageList
@@ -102,16 +113,7 @@ def menuHome():         # 메뉴 중 홈버튼 클릭 시 호출
             obj.destroy()
         Init_Scene_Home()
         scene = 'home'
-        for i in range(4):
-            if i == 0:
-                b_menu[i]['bg'] = selected_color_bg
-                b_menu[i].configure(image=menuImageList[i][1])
-                b_menu[i].image = menuImageList[i][1]
-            else:
-                b_menu[i]['bg'] = default_color_bg
-                b_menu[i].configure(image=menuImageList[i][0])
-                b_menu[i].image = menuImageList[i][0]
-
+        resetMenuButtonImage(0)
 def menuSearch():       # 메뉴 중 검색버튼 클릭 시 호출
     global scene, b_menu, menuImageList
     if scene != 'search':     # search가 아닌 scene에서 search 버튼을 누르면 객체들 삭제 후 search 생성
@@ -119,15 +121,7 @@ def menuSearch():       # 메뉴 중 검색버튼 클릭 시 호출
             obj.destroy()
         Init_Scene_Search()
         scene = 'search'
-        for i in range(4):
-            if i == 1:
-                b_menu[i]['bg'] = selected_color_bg
-                b_menu[i].configure(image=menuImageList[i][1])
-                b_menu[i].image = menuImageList[i][1]
-            else:
-                b_menu[i]['bg'] = default_color_bg
-                b_menu[i].configure(image=menuImageList[i][0])
-                b_menu[i].image = menuImageList[i][0]
+        resetMenuButtonImage(1)
 def menuFavorites():    # 메뉴 중 즐겨찾기버튼 클릭 시 호출
     global scene, b_menu, menuImageList
     if scene != 'favorites':     # favorites가 아닌 scene에서 favorites 버튼을 누르면 객체들 삭제 후 favorites 생성
@@ -135,15 +129,7 @@ def menuFavorites():    # 메뉴 중 즐겨찾기버튼 클릭 시 호출
             obj.destroy()
         Init_Scene_Favorites()
         scene = 'favorites'
-        for i in range(4):
-            if i == 2:
-                b_menu[i]['bg'] = selected_color_bg
-                b_menu[i].configure(image=menuImageList[i][1])
-                b_menu[i].image = menuImageList[i][1]
-            else:
-                b_menu[i]['bg'] = default_color_bg
-                b_menu[i].configure(image=menuImageList[i][0])
-                b_menu[i].image = menuImageList[i][0]
+        resetMenuButtonImage(2)
 def menuLibrary():      # 메뉴 중 도서관버튼 클릭 시 호출
     global scene, b_menu, menuImageList
     if scene != 'library':     # library가 아닌 scene에서 library 버튼을 누르면 객체들 삭제 후 library 생성
@@ -151,15 +137,7 @@ def menuLibrary():      # 메뉴 중 도서관버튼 클릭 시 호출
             obj.destroy()
         Init_Scene_Library()
         scene = 'library'
-        for i in range(4):
-            if i == 3:
-                b_menu[i]['bg'] = selected_color_bg
-                b_menu[i].configure(image=menuImageList[i][1])
-                b_menu[i].image = menuImageList[i][1]
-            else:
-                b_menu[i]['bg'] = default_color_bg
-                b_menu[i].configure(image=menuImageList[i][0])
-                b_menu[i].image = menuImageList[i][0]
+        resetMenuButtonImage(3)
 def Init_menuButton():      # 하단의 메뉴(홈,검색,즐겨찾기,도서관) 버튼 생성
     global b_menu, menuImageList
     b_width, b_height = 150, 82
@@ -650,4 +628,3 @@ Init_Scene_Home()
 telegram.activeTelegramBot()     # 프로그램 실행 시 텔레그램 봇 활성화 / 베스트셀러 봇 2021 텔레그램에 검색
 
 window.mainloop()
-

@@ -4,7 +4,6 @@ import urllib.request
 from PIL import Image, ImageTk
 import webbrowser
 import random
-from tkinter import PhotoImage
 
 def getImage(url):      # url로 해당 이미지 생성
     if url == '':   # image가 없는 책의 경우
