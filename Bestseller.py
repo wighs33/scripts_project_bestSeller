@@ -8,7 +8,7 @@ import gmail
 import telegram
 import folium
 import webbrowser
-# import spam1
+import spam
 
 categoryDict = {'소설': 100, '시/에세이': 110, '경제/경영': 160, '자기계발': 170, '인문': 120, '역사/문화': 190, '가정/생활/요리': 130,
                 '건강': 140, '취미/레저': 150, '사회': 180, '종교': 200, '예술/대중문화': 210, '학습/참고서': 220, '국어/외국어': 230,
@@ -43,7 +43,7 @@ def openBook(book):     # 책 상세정보창 열기
     # 책 상세정보 info1
     info1 = '제목: '+func.changeText(book.title)+'\n\n저자: '+func.changeText(book.author)+'\n\n출간일: '\
             +func.changeDate(book.pubdate)+'\n\n가격: '+book.price+'원'
-    # c++연동 - spam1.changeDate()로 변경
+    # c++연동 - spam.changeDate()로 변경
 
     l_bookInfo1 = Label(new_canvas, text=info1, bg='white', bd=1, relief='ridge', font=font_, width=32, height=10, justify=LEFT, anchor='w')
     new_canvas.create_window(215, 30, anchor='nw', window=l_bookInfo1)
