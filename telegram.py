@@ -81,9 +81,3 @@ def activeTelegramBot():
     bot.message_loop(handle)
 
     print('Listening...')
-
-    # 디버깅 용 / 나중에 제거
-    # while 1:
-    #     time.sleep(10)
-
-#activeTelegramBot()     # 디버깅 용 / 나중에 제거
